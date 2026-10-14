@@ -9,9 +9,8 @@ class ContactPage extends StatefulWidget {
   static const Color bodyText = Color(0xFF52667A);
   static const Color lightBg = Color(0xFFF6FBFD);
 
-  // Temporary development contact
-  static const String whatsappNumber = '923104939138';
-  static const String phoneNumber = '+923104939138';
+  static const String whatsappNumber = '971551027786';
+  static const String phoneNumber = '+971551027786';
 
   @override
   State<ContactPage> createState() => _ContactPageState();
@@ -62,7 +61,7 @@ class _ContactPageState extends State<ContactPage>
   Future<void> _openWhatsApp() async {
     final Uri url = Uri.parse(
       'https://wa.me/${ContactPage.whatsappNumber}'
-      '?text=${Uri.encodeComponent('Hello AquaFlow Dubai, I would like to get information about your water delivery service.')}',
+      '?text=${Uri.encodeComponent('Hello Sweet Water Tankers, I would like to get information about your water delivery service.')}',
     );
 
     if (await canLaunchUrl(url)) {
@@ -229,7 +228,7 @@ class _TopBarState extends State<_TopBar> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'AquaFlow',
+                        'Sweet Water Tankers',
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: mobile ? 17 : 19,
@@ -388,7 +387,7 @@ class _Hero extends StatelessWidget {
                         borderRadius: BorderRadius.circular(30),
                       ),
                       child: const Text(
-                        'CONTACT AQUAFLOW',
+                        'CONTACT SWEET WATER TANKERS',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: ContactPage.primary,
@@ -815,7 +814,7 @@ class _ContactFormState extends State<_ContactForm> {
 
     final message =
         '''
-Hello AquaFlow Dubai,
+Hello Sweet Water Tankers,
 
 Name: ${_nameController.text.trim()}
 Phone: ${_phoneController.text.trim()}
@@ -1439,7 +1438,7 @@ class _BottomCtaState extends State<_BottomCta> {
                   const SizedBox(height: 12),
 
                   Text(
-                    'Talk to AquaFlow Dubai today.',
+                    'Talk to Sweet Water Tankers today.',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.75),
@@ -1609,7 +1608,7 @@ class _Footer extends StatelessWidget {
 
                     Flexible(
                       child: Text(
-                        'AquaFlow Dubai',
+                        'Sweet Water Tankers',
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: Colors.white,
@@ -1629,7 +1628,7 @@ class _Footer extends StatelessWidget {
               const SizedBox(height: 18),
 
               Text(
-                '© 2026 AquaFlow Dubai. '
+                '© 2026 Sweet Water Tankers. '
                 'Water Delivery Solutions.',
                 textAlign: TextAlign.center,
                 style: TextStyle(

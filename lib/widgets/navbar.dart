@@ -15,9 +15,14 @@ class Navbar extends StatelessWidget {
   static const Color darkText = Color(0xFF102A43);
   static const Color bodyText = Color(0xFF334E68);
 
-  // Temporary contact details
-  static const String whatsappNumber = '923104939138';
-  static const String phoneNumber = '+923104939138';
+  static const String whatsappNumber = '971551027786';
+  static const String phoneNumber = '+971551027786';
+
+  // ============================================================
+  // LOGO / FAVICON
+  // ============================================================
+
+  static const String logoAsset = 'assets/images/favicon.png';
 
   // ============================================================
   // WHATSAPP URL
@@ -25,7 +30,7 @@ class Navbar extends StatelessWidget {
 
   static Uri get whatsappUrl {
     const message =
-        'Hello AquaFlow Dubai, I would like to request a water delivery quote.';
+        'Hello Sweet Water Tankers, I would like to request a water delivery quote.';
 
     return Uri.https('wa.me', '/$whatsappNumber', {'text': message});
   }
@@ -210,7 +215,6 @@ class Navbar extends StatelessWidget {
 
   Widget _mobileLogo({required bool isVerySmall}) {
     final double iconSize = isVerySmall ? 36 : 40;
-    final double waterIconSize = isVerySmall ? 21 : 23;
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -219,24 +223,30 @@ class Navbar extends StatelessWidget {
           width: iconSize,
           height: iconSize,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [primary, primary.withValues(alpha: 0.82)],
-            ),
+            color: Colors.white,
             borderRadius: BorderRadius.circular(isVerySmall ? 9 : 11),
             boxShadow: [
               BoxShadow(
-                color: primary.withValues(alpha: 0.18),
+                color: primary.withValues(alpha: 0.14),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
             ],
           ),
-          child: Icon(
-            Icons.water_drop_rounded,
-            color: Colors.white,
-            size: waterIconSize,
+          clipBehavior: Clip.antiAlias,
+          child: Padding(
+            padding: const EdgeInsets.all(2),
+            child: Image.asset(
+              logoAsset,
+              fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) {
+                return Icon(
+                  Icons.water_drop_rounded,
+                  color: primary,
+                  size: isVerySmall ? 21 : 23,
+                );
+              },
+            ),
           ),
         ),
 
@@ -248,12 +258,12 @@ class Navbar extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'AquaFlow',
+                'Sweet Water',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: darkText,
-                  fontSize: isVerySmall ? 17 : 18,
+                  fontSize: isVerySmall ? 16 : 18,
                   fontWeight: FontWeight.w800,
                   height: 1.0,
                 ),
@@ -262,7 +272,7 @@ class Navbar extends StatelessWidget {
               const SizedBox(height: 2),
 
               Text(
-                'DUBAI',
+                'TANKERS',
                 maxLines: 1,
                 overflow: TextOverflow.clip,
                 style: TextStyle(
@@ -292,24 +302,30 @@ class Navbar extends StatelessWidget {
           width: 43,
           height: 43,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [primary, primary.withValues(alpha: 0.82)],
-            ),
+            color: Colors.white,
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: primary.withValues(alpha: 0.16),
+                color: primary.withValues(alpha: 0.14),
                 blurRadius: 12,
                 offset: const Offset(0, 4),
               ),
             ],
           ),
-          child: const Icon(
-            Icons.water_drop_rounded,
-            color: Colors.white,
-            size: 25,
+          clipBehavior: Clip.antiAlias,
+          child: Padding(
+            padding: const EdgeInsets.all(2),
+            child: Image.asset(
+              logoAsset,
+              fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) {
+                return const Icon(
+                  Icons.water_drop_rounded,
+                  color: primary,
+                  size: 25,
+                );
+              },
+            ),
           ),
         ),
 
@@ -320,7 +336,7 @@ class Navbar extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'AquaFlow',
+              'Sweet Water',
               style: TextStyle(
                 color: darkText,
                 fontSize: 19,
@@ -330,7 +346,7 @@ class Navbar extends StatelessWidget {
             ),
             SizedBox(height: 3),
             Text(
-              'DUBAI',
+              'TANKERS',
               style: TextStyle(
                 color: primary,
                 fontSize: 9,
@@ -464,8 +480,6 @@ class Navbar extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(sheetContext).pop();
 
-                      // Open WhatsApp after closing
-                      // the bottom sheet.
                       _openWhatsApp();
                     },
                   ),
@@ -779,7 +793,6 @@ class _MobileNavItemState extends State<_MobileNavItem> {
   @override
   Widget build(BuildContext context) {
     final double height = widget.compact ? 48 : 54;
-
     final double iconBox = widget.compact ? 36 : 40;
 
     return SizedBox(

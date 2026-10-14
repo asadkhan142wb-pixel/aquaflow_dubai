@@ -175,13 +175,13 @@ class _ServicesSectionState extends State<ServicesSection>
               // DECORATIVE BACKGROUND CIRCLE
               // ==================================================
 
-              AnimatedBuilder(
-                animation: _backgroundPulse,
-                builder: (context, child) {
-                  return Positioned(
-                    right: -150,
-                    top: -170,
-                    child: Transform.scale(
+              Positioned(
+                right: -150,
+                top: -170,
+                child: AnimatedBuilder(
+                  animation: _backgroundPulse,
+                  builder: (context, child) {
+                    return Transform.scale(
                       scale: _backgroundPulse.value,
                       child: Container(
                         width: 420,
@@ -193,24 +193,24 @@ class _ServicesSectionState extends State<ServicesSection>
                           ),
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
 
               // ==================================================
               // SECOND BACKGROUND CIRCLE
               // ==================================================
-              AnimatedBuilder(
-                animation: _backgroundPulse,
-                builder: (context, child) {
-                  final double scale =
-                      1.08 - ((_backgroundPulse.value - 0.85) * 0.35);
+              Positioned(
+                left: -190,
+                bottom: -190,
+                child: AnimatedBuilder(
+                  animation: _backgroundPulse,
+                  builder: (context, child) {
+                    final double scale =
+                        1.08 - ((_backgroundPulse.value - 0.85) * 0.35);
 
-                  return Positioned(
-                    left: -190,
-                    bottom: -190,
-                    child: Transform.scale(
+                    return Transform.scale(
                       scale: scale,
                       child: Container(
                         width: 450,
@@ -221,9 +221,9 @@ class _ServicesSectionState extends State<ServicesSection>
                               .withValues(alpha: 0.025),
                         ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
 
               // ==================================================
@@ -744,10 +744,7 @@ class _ServiceCard extends StatelessWidget {
               child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  // ==================================================
                   // IMAGE
-                  // ==================================================
-
                   AnimatedScale(
                     scale: hovered ? 1.055 : 1.0,
                     duration: const Duration(milliseconds: 500),
@@ -876,10 +873,7 @@ class _ServiceCard extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // ==================================================
                     // DESCRIPTION
-                    // ==================================================
-
                     Text(
                       data.description,
                       maxLines: 3,

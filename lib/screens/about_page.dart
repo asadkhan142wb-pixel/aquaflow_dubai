@@ -190,7 +190,7 @@ class _TopBarState extends State<_TopBar> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              'AquaFlow',
+                              'Sweet Water Tankers',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
@@ -396,7 +396,7 @@ class _Hero extends StatelessWidget {
                             borderRadius: BorderRadius.circular(30),
                           ),
                           child: Text(
-                            'ABOUT AQUAFLOW',
+                            'ABOUT SWEET WATER TANKERS',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: AboutPage.primary,
@@ -421,7 +421,7 @@ class _Hero extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       Text(
-                        'AquaFlow Dubai provides dependable '
+                        'Sweet Water Tankers provides dependable '
                         'water tanker delivery solutions for '
                         'homes, businesses, construction sites, '
                         'gardens and swimming pools across Dubai.',
@@ -708,7 +708,7 @@ class _AboutVisualState extends State<_AboutVisual> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'AQUAFLOW DUBAI',
+                                  'SWEET WATER TANKERS',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: verySmall ? 19 : 24,
@@ -853,7 +853,7 @@ class _AboutContent extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             const Text(
-              'AquaFlow Dubai is focused on making water delivery simple, '
+              'Sweet Water Tankers is focused on making water delivery simple, '
               'reliable and convenient. We provide professional tanker '
               'water supply for residential, commercial and industrial needs.',
               style: TextStyle(
@@ -996,7 +996,7 @@ class _WhyChoose extends StatelessWidget {
               child: Column(
                 children: [
                   const Text(
-                    'WHY AQUAFLOW',
+                    'WHY SWEET WATER TANKERS',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: AboutPage.primary,
@@ -1637,10 +1637,10 @@ class _BottomCtaState extends State<_BottomCta> {
   bool _pressed = false;
 
   Future<void> _openWhatsApp() async {
-    const whatsappNumber = '923104939138';
+    const whatsappNumber = '971551027786';
 
     final message = Uri.encodeComponent(
-      'Hello AquaFlow Dubai,\n\n'
+      'Hello Sweet Water Tankers,\n\n'
       'I would like to request a quote for water delivery.\n\n'
       'Please share the details and pricing.',
     );
@@ -1723,7 +1723,7 @@ class _BottomCtaState extends State<_BottomCta> {
                       ),
                       const SizedBox(height: 12),
                       const Text(
-                        'Get in touch with AquaFlow Dubai today.',
+                        'Get in touch with Sweet Water Tankers today.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: AboutPage.bodyText,
@@ -1910,7 +1910,7 @@ class _Footer extends StatelessWidget {
                         const SizedBox(width: 12),
                         Flexible(
                           child: Text(
-                            'AquaFlow Dubai',
+                            'Sweet Water Tankers',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
@@ -1927,7 +1927,7 @@ class _Footer extends StatelessWidget {
                   Divider(color: Colors.white.withValues(alpha: 0.08)),
                   const SizedBox(height: 18),
                   Text(
-                    '© 2026 AquaFlow Dubai. Water Delivery Solutions.',
+                    '© 2026 Sweet Water Tankers. Water Delivery Solutions.',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.55),

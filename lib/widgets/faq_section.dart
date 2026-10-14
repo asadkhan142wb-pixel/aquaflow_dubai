@@ -9,13 +9,20 @@ class FaqSection extends StatefulWidget {
   static const Color bodyText = Color(0xFF52667A);
   static const Color lightBg = Color(0xFFF6FBFD);
 
-  // Temporary WhatsApp number
-  static const String whatsappNumber = '923104939138';
+  // ============================================================
+  // WHATSAPP NUMBER
+  // ============================================================
+
+  static const String whatsappNumber = '971551027786';
+
+  // ============================================================
+  // WHATSAPP URL
+  // ============================================================
 
   static Uri get whatsappUrl {
     const message =
-        'Hello AquaFlow Dubai, I would like to get information about '
-        'your water delivery service.';
+        'Hello Sweet Water Tankers, I would like to get information '
+        'about your water delivery service.';
 
     return Uri.https('wa.me', '/$whatsappNumber', {'text': message});
   }
@@ -143,7 +150,7 @@ class _FaqSectionState extends State<FaqSection>
       final uri = FaqSection.whatsappUrl;
 
       await launchUrl(uri, mode: LaunchMode.platformDefault);
-    } catch (e) {
+    } catch (_) {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -157,7 +164,6 @@ class _FaqSectionState extends State<FaqSection>
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-
     final isMobile = width < 800;
 
     return Container(
@@ -610,9 +616,9 @@ class _WhatsAppButtonState extends State<_WhatsAppButton> {
 
                   const SizedBox(width: 13),
 
-                  Column(
+                  const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       Text(
                         'Have More Questions?',
                         style: TextStyle(

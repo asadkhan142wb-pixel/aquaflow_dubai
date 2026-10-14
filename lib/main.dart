@@ -16,17 +16,17 @@ import 'widgets/footer_section.dart';
 import 'widgets/about_section.dart';
 
 void main() {
-  runApp(const AquaFlowApp());
+  runApp(const SweetWaterTankersApp());
 }
 
-class AquaFlowApp extends StatelessWidget {
-  const AquaFlowApp({super.key});
+class SweetWaterTankersApp extends StatelessWidget {
+  const SweetWaterTankersApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'AquaFlow Dubai',
+      title: 'Sweet Water Tankers',
       theme: ThemeData(
         useMaterial3: true,
         scaffoldBackgroundColor: Colors.white,
@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: ScrollConfiguration(
-        behavior: const AquaFlowScrollBehavior(),
+        behavior: const SweetWaterTankersScrollBehavior(),
         child: SingleChildScrollView(
           controller: _scrollController,
           physics: const BouncingScrollPhysics(
@@ -189,8 +189,8 @@ class _HomePageState extends State<HomePage> {
 // CUSTOM SCROLL BEHAVIOR
 // ================================================================
 
-class AquaFlowScrollBehavior extends MaterialScrollBehavior {
-  const AquaFlowScrollBehavior();
+class SweetWaterTankersScrollBehavior extends MaterialScrollBehavior {
+  const SweetWaterTankersScrollBehavior();
 
   @override
   Set<PointerDeviceKind> get dragDevices => {

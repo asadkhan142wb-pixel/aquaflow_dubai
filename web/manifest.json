@@ -1,11 +1,11 @@
 {
-    "name": "aquaflow_dubai",
-    "short_name": "aquaflow_dubai",
+    "name": "Sweet Water Tankers",
+    "short_name": "Sweet Water Tankers",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Water delivery in Dubai by Sweet Water Tankers.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

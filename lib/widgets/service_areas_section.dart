@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 
 class ServiceAreasSection extends StatefulWidget {
   const ServiceAreasSection({super.key});
@@ -19,8 +21,8 @@ class _ServiceAreasSectionState extends State<ServiceAreasSection>
   late final Animation<double> _headingFade;
   late final Animation<Offset> _headingSlide;
 
-  late final Animation<double> _visualFade;
-  late final Animation<Offset> _visualSlide;
+  late final Animation<double> _mapFade;
+  late final Animation<Offset> _mapSlide;
 
   late final Animation<double> _infoFade;
   late final Animation<Offset> _infoSlide;
@@ -31,7 +33,7 @@ class _ServiceAreasSectionState extends State<ServiceAreasSection>
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1600),
+      duration: const Duration(milliseconds: 1500),
     );
 
     _headingFade = CurvedAnimation(
@@ -47,29 +49,29 @@ class _ServiceAreasSectionState extends State<ServiceAreasSection>
           ),
         );
 
-    _visualFade = CurvedAnimation(
+    _mapFade = CurvedAnimation(
       parent: _controller,
-      curve: const Interval(0.20, 0.65, curve: Curves.easeOut),
+      curve: const Interval(0.18, 0.62, curve: Curves.easeOut),
     );
 
-    _visualSlide =
-        Tween<Offset>(begin: const Offset(-0.08, 0), end: Offset.zero).animate(
+    _mapSlide = Tween<Offset>(begin: const Offset(-0.06, 0), end: Offset.zero)
+        .animate(
           CurvedAnimation(
             parent: _controller,
-            curve: const Interval(0.20, 0.70, curve: Curves.easeOutCubic),
+            curve: const Interval(0.18, 0.68, curve: Curves.easeOutCubic),
           ),
         );
 
     _infoFade = CurvedAnimation(
       parent: _controller,
-      curve: const Interval(0.30, 0.75, curve: Curves.easeOut),
+      curve: const Interval(0.28, 0.72, curve: Curves.easeOut),
     );
 
-    _infoSlide = Tween<Offset>(begin: const Offset(0.08, 0), end: Offset.zero)
+    _infoSlide = Tween<Offset>(begin: const Offset(0.06, 0), end: Offset.zero)
         .animate(
           CurvedAnimation(
             parent: _controller,
-            curve: const Interval(0.30, 0.78, curve: Curves.easeOutCubic),
+            curve: const Interval(0.28, 0.78, curve: Curves.easeOutCubic),
           ),
         );
 
@@ -89,16 +91,27 @@ class _ServiceAreasSectionState extends State<ServiceAreasSection>
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+
     final isMobile = width < 800;
+    final isTablet = width >= 800 && width < 1200;
 
     return Container(
       width: double.infinity,
       color: ServiceAreasSection.lightBg,
       padding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 24 : 70,
-        vertical: isMobile ? 70 : 105,
+        horizontal: isMobile
+            ? 20
+            : isTablet
+            ? 40
+            : 70,
+        vertical: isMobile
+            ? 70
+            : isTablet
+            ? 85
+            : 105,
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           FadeTransition(
             opacity: _headingFade,
@@ -114,15 +127,18 @@ class _ServiceAreasSectionState extends State<ServiceAreasSection>
             constraints: const BoxConstraints(maxWidth: 1180),
             child: isMobile
                 ? Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       FadeTransition(
-                        opacity: _visualFade,
+                        opacity: _mapFade,
                         child: SlideTransition(
-                          position: _visualSlide,
-                          child: const _DubaiCoverageVisual(),
+                          position: _mapSlide,
+                          child: const _RealServiceMap(),
                         ),
                       ),
-                      const SizedBox(height: 40),
+
+                      const SizedBox(height: 42),
+
                       FadeTransition(
                         opacity: _infoFade,
                         child: SlideTransition(
@@ -133,19 +149,21 @@ class _ServiceAreasSectionState extends State<ServiceAreasSection>
                     ],
                   )
                 : Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
                         flex: 6,
                         child: FadeTransition(
-                          opacity: _visualFade,
+                          opacity: _mapFade,
                           child: SlideTransition(
-                            position: _visualSlide,
-                            child: const _DubaiCoverageVisual(),
+                            position: _mapSlide,
+                            child: const _RealServiceMap(),
                           ),
                         ),
                       ),
-                      const SizedBox(width: 70),
+
+                      SizedBox(width: isTablet ? 40 : 65),
+
                       Expanded(
                         flex: 4,
                         child: FadeTransition(
@@ -177,36 +195,29 @@ class _Heading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        TweenAnimationBuilder<double>(
-          tween: Tween(begin: 0.85, end: 1.0),
-          duration: const Duration(milliseconds: 800),
-          curve: Curves.easeOutBack,
-          builder: (context, scale, child) {
-            return Transform.scale(scale: scale, child: child);
-          },
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(30),
-              border: Border.all(color: const Color(0xFFB9E8F1)),
-              boxShadow: [
-                BoxShadow(
-                  color: ServiceAreasSection.primary.withValues(alpha: 0.06),
-                  blurRadius: 15,
-                  offset: const Offset(0, 5),
-                ),
-              ],
-            ),
-            child: const Text(
-              'SERVICE AREAS',
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 1.8,
-                color: ServiceAreasSection.primary,
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(30),
+            border: Border.all(color: const Color(0xFFB9E8F1)),
+            boxShadow: [
+              BoxShadow(
+                color: ServiceAreasSection.primary.withValues(alpha: 0.06),
+                blurRadius: 15,
+                offset: const Offset(0, 5),
               ),
+            ],
+          ),
+          child: const Text(
+            'SERVICE AREAS',
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 1.8,
+              color: ServiceAreasSection.primary,
             ),
           ),
         ),
@@ -214,7 +225,7 @@ class _Heading extends StatelessWidget {
         const SizedBox(height: 18),
 
         Text(
-          'Water Delivery Across Dubai',
+          'Water Delivery Across UAE',
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: isMobile ? 31 : 44,
@@ -228,11 +239,10 @@ class _Heading extends StatelessWidget {
         const SizedBox(height: 15),
 
         ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 690),
+          constraints: const BoxConstraints(maxWidth: 720),
           child: const Text(
-            'From residential communities to commercial areas and '
-            'construction sites, our delivery service covers locations '
-            'across Dubai.',
+            'Reliable water tanker delivery across Dubai, Sharjah '
+            'and Ajman for homes, businesses and construction sites.',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 16,
@@ -247,24 +257,31 @@ class _Heading extends StatelessWidget {
 }
 
 // ============================================================
-// DUBAI COVERAGE VISUAL
+// REAL MAP
 // ============================================================
 
-class _DubaiCoverageVisual extends StatefulWidget {
-  const _DubaiCoverageVisual();
+class _RealServiceMap extends StatefulWidget {
+  const _RealServiceMap();
 
   @override
-  State<_DubaiCoverageVisual> createState() => _DubaiCoverageVisualState();
+  State<_RealServiceMap> createState() => _RealServiceMapState();
 }
 
-class _DubaiCoverageVisualState extends State<_DubaiCoverageVisual>
+class _RealServiceMapState extends State<_RealServiceMap>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
 
-  late final Animation<double> _mapLineAnimation;
-  late final Animation<double> _centerScale;
-  late final Animation<double> _badgeFade;
-  late final Animation<Offset> _badgeSlide;
+  late final Animation<double> _fade;
+
+  final MapController _mapController = MapController();
+
+  static const LatLng _mapCenter = LatLng(25.315, 55.405);
+
+  static const LatLng _dubai = LatLng(25.2048, 55.2708);
+
+  static const LatLng _sharjah = LatLng(25.3463, 55.4209);
+
+  static const LatLng _ajman = LatLng(25.4052, 55.5136);
 
   @override
   void initState() {
@@ -272,31 +289,10 @@ class _DubaiCoverageVisualState extends State<_DubaiCoverageVisual>
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1800),
+      duration: const Duration(milliseconds: 1100),
     );
 
-    _mapLineAnimation = CurvedAnimation(
-      parent: _controller,
-      curve: const Interval(0.05, 0.55, curve: Curves.easeOutCubic),
-    );
-
-    _centerScale = CurvedAnimation(
-      parent: _controller,
-      curve: const Interval(0.35, 0.75, curve: Curves.easeOutBack),
-    );
-
-    _badgeFade = CurvedAnimation(
-      parent: _controller,
-      curve: const Interval(0.55, 0.85, curve: Curves.easeOut),
-    );
-
-    _badgeSlide = Tween<Offset>(begin: const Offset(0, 0.12), end: Offset.zero)
-        .animate(
-          CurvedAnimation(
-            parent: _controller,
-            curve: const Interval(0.55, 0.90, curve: Curves.easeOutCubic),
-          ),
-        );
+    _fade = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
@@ -311,207 +307,325 @@ class _DubaiCoverageVisualState extends State<_DubaiCoverageVisual>
     super.dispose();
   }
 
+  // ==========================================================
+  // MAP CONTROLS
+  // ==========================================================
+
+  void _zoomIn() {
+    final currentZoom = _mapController.camera.zoom;
+
+    _mapController.move(_mapController.camera.center, currentZoom + 0.7);
+  }
+
+  void _zoomOut() {
+    final currentZoom = _mapController.camera.zoom;
+
+    _mapController.move(_mapController.camera.center, currentZoom - 0.7);
+  }
+
+  void _resetMap() {
+    _mapController.move(_mapCenter, 10.6);
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final isSmall = width < 500;
 
-    return Container(
-      width: double.infinity,
-      height: isSmall ? 390 : 480,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: const Color(0xFFDDEDF1)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.035),
-            blurRadius: 25,
-            offset: const Offset(0, 12),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(30),
-        child: Stack(
-          children: [
-            Positioned(
-              top: 80,
-              left: 0,
-              right: 0,
-              child: _AnimatedMapLine(
-                rotation: -0.10,
-                animation: _mapLineAnimation,
-              ),
-            ),
+    final isTinyMobile = width <= 340;
+    final isVerySmall = width <= 380;
+    final isSmallMobile = width <= 500;
 
-            Positioned(
-              top: 175,
-              left: -20,
-              right: -20,
-              child: _AnimatedMapLine(
-                rotation: 0.08,
-                animation: _mapLineAnimation,
-              ),
-            ),
+    final double mapHeight;
 
-            Positioned(
-              top: 275,
-              left: 0,
-              right: 0,
-              child: _AnimatedMapLine(
-                rotation: -0.06,
-                animation: _mapLineAnimation,
-              ),
-            ),
+    if (isTinyMobile) {
+      mapHeight = 410;
+    } else if (isVerySmall) {
+      mapHeight = 425;
+    } else if (isSmallMobile) {
+      mapHeight = 440;
+    } else {
+      mapHeight = 500;
+    }
 
-            Positioned(
-              top: 365,
-              left: -20,
-              right: -20,
-              child: _AnimatedMapLine(
-                rotation: 0.10,
-                animation: _mapLineAnimation,
-              ),
-            ),
-
-            Positioned(
-              left: 65,
-              top: 70,
-              child: const _AnimatedRoadDot(label: 'Jumeirah', delay: 0.35),
-            ),
-
-            Positioned(
-              right: 70,
-              top: 120,
-              child: const _AnimatedRoadDot(label: 'Business Bay', delay: 0.45),
-            ),
-
-            Positioned(
-              left: 95,
-              top: 225,
-              child: const _AnimatedRoadDot(label: 'Al Barsha', delay: 0.55),
-            ),
-
-            Positioned(
-              right: 80,
-              top: 285,
-              child: const _AnimatedRoadDot(label: 'Deira', delay: 0.65),
-            ),
-
-            Positioned(
-              left: 70,
-              bottom: 65,
-              child: const _AnimatedRoadDot(label: 'Dubai Marina', delay: 0.75),
-            ),
-
-            Center(
-              child: AnimatedBuilder(
-                animation: _centerScale,
-                builder: (context, child) {
-                  return Transform.scale(
-                    scale: _centerScale.value,
-                    child: child,
-                  );
-                },
-                child: _PulsingCoverageMarker(isSmall: isSmall),
-              ),
-            ),
-
-            Positioned(
-              top: 22,
-              left: 22,
-              child: FadeTransition(
-                opacity: _badgeFade,
-                child: SlideTransition(
-                  position: _badgeSlide,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 13,
-                      vertical: 10,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(14),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.06),
-                          blurRadius: 18,
-                          offset: const Offset(0, 7),
-                        ),
-                      ],
-                    ),
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.public_rounded,
-                          size: 18,
-                          color: ServiceAreasSection.primary,
-                        ),
-                        SizedBox(width: 7),
-                        Text(
-                          'Dubai Wide Coverage',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w800,
-                            color: ServiceAreasSection.darkText,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-            Positioned(
-              bottom: 22,
-              right: 22,
-              child: FadeTransition(
-                opacity: _badgeFade,
-                child: SlideTransition(
-                  position: _badgeSlide,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 13,
-                      vertical: 10,
-                    ),
-                    decoration: BoxDecoration(
-                      color: ServiceAreasSection.darkText,
-                      borderRadius: BorderRadius.circular(14),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.10),
-                          blurRadius: 18,
-                          offset: const Offset(0, 7),
-                        ),
-                      ],
-                    ),
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.local_shipping_rounded,
-                          size: 17,
-                          color: Color(0xFF56D4ED),
-                        ),
-                        SizedBox(width: 7),
-                        Text(
-                          'Fast Local Dispatch',
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w800,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+    return FadeTransition(
+      opacity: _fade,
+      child: Container(
+        width: double.infinity,
+        height: mapHeight,
+        clipBehavior: Clip.hardEdge,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(isVerySmall ? 22 : 30),
+          border: Border.all(color: const Color(0xFFDDEDF1)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.045),
+              blurRadius: 28,
+              offset: const Offset(0, 14),
             ),
           ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(isVerySmall ? 22 : 30),
+          child: Stack(
+            clipBehavior: Clip.hardEdge,
+            children: [
+              // ==================================================
+              // MAP
+              // ==================================================
+
+              FlutterMap(
+                mapController: _mapController,
+
+                options: MapOptions(
+                  initialCenter: _mapCenter,
+                  initialZoom: 10.6,
+                  minZoom: 9.5,
+                  maxZoom: 16.0,
+
+                  // =================================================
+                  // IMPORTANT SCROLL FIX
+                  //
+                  // We intentionally DO NOT enable:
+                  // - mouse drag
+                  // - scroll wheel zoom
+                  // - fling animation
+                  //
+                  // This prevents the map from taking control of
+                  // the webpage's scrolling.
+                  //
+                  // Zoom still works using:
+                  // + / - buttons
+                  // double click
+                  // mobile pinch
+                  // =================================================
+                  interactionOptions: const InteractionOptions(
+                    flags:
+                        InteractiveFlag.doubleTapZoom |
+                        InteractiveFlag.doubleTapDragZoom |
+                        InteractiveFlag.pinchMove |
+                        InteractiveFlag.pinchZoom,
+                  ),
+                ),
+
+                children: [
+                  // ==================================================
+                  // OPENSTREETMAP
+                  // ==================================================
+
+                  TileLayer(
+                    urlTemplate:
+                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    userAgentPackageName: 'sweet_water_tankers',
+                    maxZoom: 19,
+                  ),
+
+                  // ==================================================
+                  // COVERAGE CIRCLES
+                  // ==================================================
+                  CircleLayer(
+                    circles: [
+                      CircleMarker(
+                        point: _dubai,
+                        radius: 5000,
+                        useRadiusInMeter: true,
+                        color: ServiceAreasSection.primary.withValues(
+                          alpha: 0.07,
+                        ),
+                        borderColor: ServiceAreasSection.primary.withValues(
+                          alpha: 0.30,
+                        ),
+                        borderStrokeWidth: 2,
+                      ),
+
+                      CircleMarker(
+                        point: _sharjah,
+                        radius: 4000,
+                        useRadiusInMeter: true,
+                        color: ServiceAreasSection.primary.withValues(
+                          alpha: 0.06,
+                        ),
+                        borderColor: ServiceAreasSection.primary.withValues(
+                          alpha: 0.25,
+                        ),
+                        borderStrokeWidth: 2,
+                      ),
+
+                      CircleMarker(
+                        point: _ajman,
+                        radius: 3500,
+                        useRadiusInMeter: true,
+                        color: ServiceAreasSection.primary.withValues(
+                          alpha: 0.06,
+                        ),
+                        borderColor: ServiceAreasSection.primary.withValues(
+                          alpha: 0.25,
+                        ),
+                        borderStrokeWidth: 2,
+                      ),
+                    ],
+                  ),
+
+                  // ==================================================
+                  // CONNECTION LINE
+                  // ==================================================
+                  PolylineLayer(
+                    polylines: [
+                      Polyline(
+                        points: const [_dubai, _sharjah, _ajman],
+                        strokeWidth: 3,
+                        color: ServiceAreasSection.primary.withValues(
+                          alpha: 0.65,
+                        ),
+                        pattern: const StrokePattern.dotted(spacingFactor: 1.5),
+                      ),
+                    ],
+                  ),
+
+                  // ==================================================
+                  // MARKERS
+                  // ==================================================
+                  MarkerLayer(
+                    markers: [
+                      Marker(
+                        point: _dubai,
+                        width: isVerySmall ? 124 : 155,
+                        height: isVerySmall ? 120 : 125,
+                        alignment: Alignment.topCenter,
+                        child: _MapMarker(
+                          name: 'Dubai',
+                          subtitle: 'Main Service Area',
+                          primary: true,
+                          compact: isVerySmall,
+                        ),
+                      ),
+
+                      Marker(
+                        point: _sharjah,
+                        width: isVerySmall ? 118 : 150,
+                        height: isVerySmall ? 120 : 125,
+                        alignment: Alignment.topCenter,
+                        child: _MapMarker(
+                          name: 'Sharjah',
+                          subtitle: 'Service Area',
+                          primary: false,
+                          compact: isVerySmall,
+                        ),
+                      ),
+
+                      Marker(
+                        point: _ajman,
+                        width: isVerySmall ? 114 : 145,
+                        height: isVerySmall ? 120 : 125,
+                        alignment: Alignment.topCenter,
+                        child: _MapMarker(
+                          name: 'Ajman',
+                          subtitle: 'Service Area',
+                          primary: false,
+                          compact: isVerySmall,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  // ==================================================
+                  // ATTRIBUTION
+                  // ==================================================
+                  RichAttributionWidget(
+                    attributions: [
+                      TextSourceAttribution(
+                        'OpenStreetMap contributors',
+                        onTap: () {},
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+
+              // ==================================================
+              // TOP BADGES
+              // ==================================================
+              if (isVerySmall)
+                Positioned(
+                  top: 12,
+                  left: 12,
+                  right: 12,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Flexible(child: _MapTopBadge(compact: true)),
+
+                      const SizedBox(width: 8),
+
+                      Flexible(
+                        child: Align(
+                          alignment: Alignment.topRight,
+                          child: _ServiceAreaBadge(compact: true),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              else ...[
+                Positioned(
+                  top: 18,
+                  left: 18,
+                  child: _MapTopBadge(compact: false),
+                ),
+
+                Positioned(
+                  top: 18,
+                  right: 18,
+                  child: _ServiceAreaBadge(compact: false),
+                ),
+              ],
+
+              // ==================================================
+              // MAP CONTROLS
+              // ==================================================
+              Positioned(
+                right: isVerySmall ? 12 : 18,
+                bottom: isVerySmall ? 70 : 48,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _MapControlButton(
+                      compact: isVerySmall,
+                      icon: Icons.add_rounded,
+                      onTap: _zoomIn,
+                    ),
+
+                    SizedBox(height: isVerySmall ? 5 : 7),
+
+                    _MapControlButton(
+                      compact: isVerySmall,
+                      icon: Icons.remove_rounded,
+                      onTap: _zoomOut,
+                    ),
+
+                    SizedBox(height: isVerySmall ? 5 : 7),
+
+                    _MapControlButton(
+                      compact: isVerySmall,
+                      icon: Icons.my_location_rounded,
+                      onTap: _resetMap,
+                    ),
+                  ],
+                ),
+              ),
+
+              // ==================================================
+              // BOTTOM DELIVERY BADGE
+              // ==================================================
+              Positioned(
+                left: isVerySmall ? 12 : 18,
+                bottom: isVerySmall ? 14 : 18,
+                right: isVerySmall ? 68 : null,
+                child: _DeliveryBadge(compact: isVerySmall),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -519,61 +633,80 @@ class _DubaiCoverageVisualState extends State<_DubaiCoverageVisual>
 }
 
 // ============================================================
-// ANIMATED MAP LINE
+// SERVICE AREA BADGE
 // ============================================================
 
-class _AnimatedMapLine extends StatelessWidget {
-  final double rotation;
-  final Animation<double> animation;
+class _ServiceAreaBadge extends StatelessWidget {
+  final bool compact;
 
-  const _AnimatedMapLine({required this.rotation, required this.animation});
+  const _ServiceAreaBadge({required this.compact});
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: animation,
-      builder: (context, child) {
-        return Align(
-          alignment: Alignment.centerLeft,
-          child: FractionallySizedBox(
-            widthFactor: animation.value,
-            child: Transform.rotate(
-              angle: rotation,
-              child: Container(
-                height: 1,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFD8EDF2),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFF087EA4).withValues(alpha: 0.04),
-                      blurRadius: 8,
-                    ),
-                  ],
-                ),
-              ),
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: compact ? 9 : 13,
+        vertical: compact ? 8 : 10,
+      ),
+      decoration: BoxDecoration(
+        color: ServiceAreasSection.darkText,
+        borderRadius: BorderRadius.circular(compact ? 11 : 14),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.14),
+            blurRadius: 18,
+            offset: const Offset(0, 7),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.location_on_rounded,
+            color: const Color(0xFF56D4ED),
+            size: compact ? 15 : 17,
+          ),
+
+          SizedBox(width: compact ? 4 : 6),
+
+          Text(
+            '3 SERVICE AREAS',
+            style: TextStyle(
+              fontSize: compact ? 8 : 10,
+              fontWeight: FontWeight.w800,
+              letterSpacing: compact ? 0.3 : 0.5,
+              color: Colors.white,
             ),
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 }
 
 // ============================================================
-// ANIMATED ROAD DOT
+// MAP MARKER
 // ============================================================
 
-class _AnimatedRoadDot extends StatefulWidget {
-  final String label;
-  final double delay;
+class _MapMarker extends StatefulWidget {
+  final String name;
+  final String subtitle;
+  final bool primary;
+  final bool compact;
 
-  const _AnimatedRoadDot({required this.label, required this.delay});
+  const _MapMarker({
+    required this.name,
+    required this.subtitle,
+    required this.primary,
+    this.compact = false,
+  });
 
   @override
-  State<_AnimatedRoadDot> createState() => _AnimatedRoadDotState();
+  State<_MapMarker> createState() => _MapMarkerState();
 }
 
-class _AnimatedRoadDotState extends State<_AnimatedRoadDot>
+class _MapMarkerState extends State<_MapMarker>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
 
@@ -585,117 +718,7 @@ class _AnimatedRoadDotState extends State<_AnimatedRoadDot>
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 550),
-    );
-
-    Future.delayed(Duration(milliseconds: (widget.delay * 1000).round()), () {
-      if (mounted) {
-        _controller.forward();
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      cursor: SystemMouseCursors.basic,
-      onEnter: (_) {
-        setState(() => _hovering = true);
-      },
-      onExit: (_) {
-        setState(() => _hovering = false);
-      },
-      child: AnimatedBuilder(
-        animation: _controller,
-        builder: (context, child) {
-          final value = Curves.easeOutBack.transform(_controller.value);
-
-          return Opacity(
-            opacity: _controller.value,
-            child: Transform.translate(
-              offset: Offset(0, 12 * (1 - value)),
-              child: child,
-            ),
-          );
-        },
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeOutCubic,
-          transform: Matrix4.translationValues(
-            _hovering ? 3 : 0,
-            _hovering ? -2 : 0,
-            0,
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 250),
-                width: _hovering ? 10 : 8,
-                height: _hovering ? 10 : 8,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: const Color(0xFF56C7DC),
-                  boxShadow: [
-                    BoxShadow(
-                      color: ServiceAreasSection.primary.withValues(
-                        alpha: _hovering ? 0.35 : 0.0,
-                      ),
-                      blurRadius: 8,
-                      spreadRadius: 2,
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(width: 6),
-
-              Text(
-                widget.label,
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: _hovering ? FontWeight.w800 : FontWeight.w600,
-                  color: ServiceAreasSection.bodyText,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ============================================================
-// PULSING COVERAGE MARKER
-// ============================================================
-
-class _PulsingCoverageMarker extends StatefulWidget {
-  final bool isSmall;
-
-  const _PulsingCoverageMarker({required this.isSmall});
-
-  @override
-  State<_PulsingCoverageMarker> createState() => _PulsingCoverageMarkerState();
-}
-
-class _PulsingCoverageMarkerState extends State<_PulsingCoverageMarker>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1800),
+      duration: const Duration(milliseconds: 1700),
     )..repeat(reverse: true);
   }
 
@@ -707,49 +730,299 @@ class _PulsingCoverageMarkerState extends State<_PulsingCoverageMarker>
 
   @override
   Widget build(BuildContext context) {
-    final outerSize = widget.isSmall ? 105.0 : 125.0;
-    final innerSize = widget.isSmall ? 68.0 : 78.0;
+    return ClipRect(
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        onEnter: (_) {
+          setState(() {
+            _hovering = true;
+          });
+        },
+        onExit: (_) {
+          setState(() {
+            _hovering = false;
+          });
+        },
+        child: AnimatedBuilder(
+          animation: _controller,
+          builder: (context, child) {
+            final pulse = Curves.easeInOut.transform(_controller.value);
 
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, child) {
-        final pulse = Curves.easeInOut.transform(_controller.value);
+            final normalPrimarySize = widget.compact ? 40.0 : 48.0;
 
-        return Container(
-          width: outerSize + (pulse * 10),
-          height: outerSize + (pulse * 10),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: ServiceAreasSection.primary.withValues(
-              alpha: 0.08 + (pulse * 0.05),
-            ),
-          ),
-          child: Center(
-            child: Container(
-              width: innerSize,
-              height: innerSize,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: ServiceAreasSection.primary,
-                boxShadow: [
-                  BoxShadow(
-                    color: ServiceAreasSection.primary.withValues(
-                      alpha: 0.20 + (pulse * 0.15),
+            final normalSecondarySize = widget.compact ? 35.0 : 42.0;
+
+            final pinSize = widget.primary
+                ? normalPrimarySize + (pulse * (widget.compact ? 3 : 4))
+                : normalSecondarySize + (pulse * (widget.compact ? 2 : 3));
+
+            final iconOuter = widget.primary
+                ? widget.compact
+                      ? 25.0
+                      : 31.0
+                : widget.compact
+                ? 23.0
+                : 27.0;
+
+            return AnimatedContainer(
+              duration: const Duration(milliseconds: 220),
+              transform: Matrix4.translationValues(0, _hovering ? -4 : 0, 0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: pinSize,
+                    height: pinSize,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: ServiceAreasSection.primary.withValues(
+                        alpha: widget.primary ? 0.13 : 0.10,
+                      ),
                     ),
-                    blurRadius: 20 + (pulse * 10),
-                    spreadRadius: 3 + (pulse * 3),
+                    child: Center(
+                      child: Container(
+                        width: iconOuter,
+                        height: iconOuter,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: ServiceAreasSection.primary,
+                          boxShadow: [
+                            BoxShadow(
+                              color: ServiceAreasSection.primary.withValues(
+                                alpha: 0.22 + (pulse * 0.10),
+                              ),
+                              blurRadius: widget.compact ? 12 : 16,
+                              spreadRadius: widget.compact ? 1 : 2,
+                            ),
+                          ],
+                        ),
+                        child: Icon(
+                          Icons.location_on_rounded,
+                          size: widget.primary
+                              ? widget.compact
+                                    ? 15
+                                    : 18
+                              : widget.compact
+                              ? 14
+                              : 16,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(height: widget.compact ? 2 : 4),
+
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 220),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: widget.compact ? 7 : 10,
+                      vertical: widget.compact ? 5 : 7,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(
+                        widget.compact ? 8 : 11,
+                      ),
+                      border: Border.all(color: const Color(0xFFE0EFF3)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(
+                            alpha: _hovering ? 0.13 : 0.08,
+                          ),
+                          blurRadius: _hovering ? 18 : 12,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          widget.name,
+                          style: TextStyle(
+                            fontSize: widget.primary
+                                ? widget.compact
+                                      ? 10
+                                      : 12
+                                : widget.compact
+                                ? 9
+                                : 11,
+                            fontWeight: FontWeight.w800,
+                            color: ServiceAreasSection.darkText,
+                          ),
+                        ),
+
+                        SizedBox(height: widget.compact ? 1 : 2),
+
+                        Text(
+                          widget.subtitle,
+                          style: TextStyle(
+                            fontSize: widget.compact ? 7 : 8,
+                            fontWeight: FontWeight.w600,
+                            color: ServiceAreasSection.bodyText,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
-              child: const Icon(
-                Icons.location_on_rounded,
-                color: Colors.white,
-                size: 36,
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+// ============================================================
+// MAP TOP BADGE
+// ============================================================
+
+class _MapTopBadge extends StatelessWidget {
+  final bool compact;
+
+  const _MapTopBadge({required this.compact});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: compact ? 9 : 12,
+        vertical: compact ? 7 : 9,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.96),
+        borderRadius: BorderRadius.circular(compact ? 10 : 13),
+        border: Border.all(color: const Color(0xFFE0EFF3)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 15,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.public_rounded,
+            size: compact ? 15 : 17,
+            color: ServiceAreasSection.primary,
+          ),
+
+          SizedBox(width: compact ? 5 : 7),
+
+          Text(
+            'UAE COVERAGE',
+            style: TextStyle(
+              fontSize: compact ? 8 : 10,
+              fontWeight: FontWeight.w800,
+              letterSpacing: compact ? 0.4 : 0.7,
+              color: ServiceAreasSection.darkText,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ============================================================
+// DELIVERY BADGE
+// ============================================================
+
+class _DeliveryBadge extends StatelessWidget {
+  final bool compact;
+
+  const _DeliveryBadge({required this.compact});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: compact ? 9 : 13,
+        vertical: compact ? 7 : 9,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.96),
+        borderRadius: BorderRadius.circular(compact ? 10 : 13),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 14,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.local_shipping_rounded,
+            size: compact ? 15 : 17,
+            color: ServiceAreasSection.primary,
+          ),
+
+          SizedBox(width: compact ? 5 : 7),
+
+          Flexible(
+            child: Text(
+              'Water Tanker Delivery',
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              style: TextStyle(
+                fontSize: compact ? 9 : 11,
+                fontWeight: FontWeight.w800,
+                color: ServiceAreasSection.darkText,
               ),
             ),
           ),
-        );
-      },
+        ],
+      ),
+    );
+  }
+}
+
+// ============================================================
+// MAP CONTROL
+// ============================================================
+
+class _MapControlButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+  final bool compact;
+
+  const _MapControlButton({
+    required this.icon,
+    required this.onTap,
+    this.compact = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final size = compact ? 36.0 : 42.0;
+
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(compact ? 10 : 12),
+      elevation: 3,
+      shadowColor: Colors.black.withValues(alpha: 0.12),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(compact ? 10 : 12),
+        child: SizedBox(
+          width: size,
+          height: size,
+          child: Icon(
+            icon,
+            color: ServiceAreasSection.darkText,
+            size: compact ? 18 : 20,
+          ),
+        ),
+      ),
     );
   }
 }
@@ -763,13 +1036,18 @@ class _CoverageInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
+    final isSmall = width < 500;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
-        const Text(
-          'Serving Homes, Businesses & Projects',
+        Text(
+          'Serving Dubai, Sharjah & Ajman',
           style: TextStyle(
-            fontSize: 30,
+            fontSize: isSmall ? 27 : 30,
             height: 1.2,
             fontWeight: FontWeight.w800,
             color: ServiceAreasSection.darkText,
@@ -779,9 +1057,9 @@ class _CoverageInfo extends StatelessWidget {
         const SizedBox(height: 15),
 
         const Text(
-          'Our delivery network is designed to reach customers '
-          'throughout Dubai with dependable tanker service and '
-          'flexible delivery options.',
+          'Our tanker delivery service covers three key areas '
+          'across the UAE, providing dependable water supply '
+          'for residential, commercial and construction needs.',
           style: TextStyle(
             fontSize: 15,
             height: 1.7,
@@ -789,34 +1067,34 @@ class _CoverageInfo extends StatelessWidget {
           ),
         ),
 
-        const SizedBox(height: 30),
-
-        const _AnimatedAreaItem(
-          icon: Icons.home_rounded,
-          title: 'Residential Areas',
-          description: 'Homes, villas and private properties.',
-          delay: 0,
-        ),
-
-        const SizedBox(height: 18),
-
-        const _AnimatedAreaItem(
-          icon: Icons.business_rounded,
-          title: 'Commercial Areas',
-          description: 'Offices, businesses, facilities and properties.',
-          delay: 150,
-        ),
-
-        const SizedBox(height: 18),
-
-        const _AnimatedAreaItem(
-          icon: Icons.construction_rounded,
-          title: 'Construction Sites',
-          description: 'Reliable supply for ongoing projects and sites.',
-          delay: 300,
-        ),
-
         const SizedBox(height: 28),
+
+        const _AreaItem(
+          icon: Icons.location_city_rounded,
+          title: 'Dubai',
+          description:
+              'Water tanker delivery for homes, businesses and projects.',
+        ),
+
+        const SizedBox(height: 16),
+
+        const _AreaItem(
+          icon: Icons.location_on_rounded,
+          title: 'Sharjah',
+          description:
+              'Reliable water supply for residential and commercial areas.',
+        ),
+
+        const SizedBox(height: 16),
+
+        const _AreaItem(
+          icon: Icons.water_drop_rounded,
+          title: 'Ajman',
+          description:
+              'Flexible tanker delivery for properties and construction sites.',
+        ),
+
+        const SizedBox(height: 27),
 
         const _CoverageCallout(),
       ],
@@ -825,147 +1103,108 @@ class _CoverageInfo extends StatelessWidget {
 }
 
 // ============================================================
-// ANIMATED AREA ITEM
+// AREA ITEM
 // ============================================================
 
-class _AnimatedAreaItem extends StatefulWidget {
+class _AreaItem extends StatefulWidget {
   final IconData icon;
   final String title;
   final String description;
-  final int delay;
 
-  const _AnimatedAreaItem({
+  const _AreaItem({
     required this.icon,
     required this.title,
     required this.description,
-    required this.delay,
   });
 
   @override
-  State<_AnimatedAreaItem> createState() => _AnimatedAreaItemState();
+  State<_AreaItem> createState() => _AreaItemState();
 }
 
-class _AnimatedAreaItemState extends State<_AnimatedAreaItem>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller;
-
+class _AreaItemState extends State<_AreaItem> {
   bool _hovering = false;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 550),
-    );
-
-    Future.delayed(Duration(milliseconds: widget.delay), () {
-      if (mounted) {
-        _controller.forward();
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
       cursor: SystemMouseCursors.basic,
       onEnter: (_) {
-        setState(() => _hovering = true);
+        setState(() {
+          _hovering = true;
+        });
       },
       onExit: (_) {
-        setState(() => _hovering = false);
+        setState(() {
+          _hovering = false;
+        });
       },
-      child: AnimatedBuilder(
-        animation: _controller,
-        builder: (context, child) {
-          final value = Curves.easeOutCubic.transform(_controller.value);
-
-          return Opacity(
-            opacity: value,
-            child: Transform.translate(
-              offset: Offset(25 * (1 - value), 0),
-              child: child,
-            ),
-          );
-        },
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOutCubic,
-          transform: Matrix4.translationValues(_hovering ? 6 : 0, 0, 0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 280),
-                curve: Curves.easeOutBack,
-                transform: Matrix4.identity(),
-                width: 46,
-                height: 46,
-                decoration: BoxDecoration(
-                  color: _hovering
-                      ? const Color(0xFFDDF5F9)
-                      : const Color(0xFFEAF8FB),
-                  borderRadius: BorderRadius.circular(13),
-                  boxShadow: [
-                    BoxShadow(
-                      color: ServiceAreasSection.primary.withValues(
-                        alpha: _hovering ? 0.12 : 0.0,
-                      ),
-                      blurRadius: 15,
-                      offset: const Offset(0, 6),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 280),
+        transform: Matrix4.translationValues(_hovering ? 5 : 0, 0, 0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 250),
+              width: 46,
+              height: 46,
+              decoration: BoxDecoration(
+                color: _hovering
+                    ? const Color(0xFFDDF5F9)
+                    : const Color(0xFFEAF8FB),
+                borderRadius: BorderRadius.circular(13),
+                boxShadow: [
+                  BoxShadow(
+                    color: ServiceAreasSection.primary.withValues(
+                      alpha: _hovering ? 0.12 : 0,
                     ),
-                  ],
-                ),
-                child: AnimatedScale(
-                  scale: _hovering ? 1.10 : 1.0,
-                  duration: const Duration(milliseconds: 220),
-                  curve: Curves.easeOutBack,
-                  child: Icon(
-                    widget.icon,
-                    color: ServiceAreasSection.primary,
-                    size: 21,
+                    blurRadius: 15,
+                    offset: const Offset(0, 6),
                   ),
+                ],
+              ),
+              child: AnimatedScale(
+                scale: _hovering ? 1.10 : 1,
+                duration: const Duration(milliseconds: 220),
+                curve: Curves.easeOutBack,
+                child: Icon(
+                  widget.icon,
+                  color: ServiceAreasSection.primary,
+                  size: 21,
                 ),
               ),
+            ),
 
-              const SizedBox(width: 13),
+            const SizedBox(width: 13),
 
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.title,
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w800,
-                        color: ServiceAreasSection.darkText,
-                      ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    widget.title,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w800,
+                      color: ServiceAreasSection.darkText,
                     ),
+                  ),
 
-                    const SizedBox(height: 4),
+                  const SizedBox(height: 4),
 
-                    Text(
-                      widget.description,
-                      style: const TextStyle(
-                        fontSize: 13,
-                        height: 1.5,
-                        color: ServiceAreasSection.bodyText,
-                      ),
+                  Text(
+                    widget.description,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      height: 1.5,
+                      color: ServiceAreasSection.bodyText,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -973,7 +1212,7 @@ class _AnimatedAreaItemState extends State<_AnimatedAreaItem>
 }
 
 // ============================================================
-// COVERAGE CALLOUT
+// CALLOUT
 // ============================================================
 
 class _CoverageCallout extends StatefulWidget {
@@ -1010,10 +1249,14 @@ class _CoverageCalloutState extends State<_CoverageCallout>
     return MouseRegion(
       cursor: SystemMouseCursors.basic,
       onEnter: (_) {
-        setState(() => _hovering = true);
+        setState(() {
+          _hovering = true;
+        });
       },
       onExit: (_) {
-        setState(() => _hovering = false);
+        setState(() {
+          _hovering = false;
+        });
       },
       child: AnimatedBuilder(
         animation: _controller,
@@ -1022,10 +1265,9 @@ class _CoverageCalloutState extends State<_CoverageCallout>
 
           return AnimatedContainer(
             duration: const Duration(milliseconds: 300),
-            curve: Curves.easeOutCubic,
             transform: Matrix4.translationValues(0, _hovering ? -4 : 0, 0),
             width: double.infinity,
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(19),
             decoration: BoxDecoration(
               gradient: const LinearGradient(
                 begin: Alignment.topLeft,
@@ -1044,26 +1286,19 @@ class _CoverageCalloutState extends State<_CoverageCallout>
               ],
             ),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 250),
+                Container(
                   width: 42,
                   height: 42,
-                  transform: Matrix4.identity()
-                    ..scaleByDouble(
-                      _hovering ? 1.08 : 1.0,
-                      _hovering ? 1.08 : 1.0,
-                      _hovering ? 1.08 : 1.0,
-                      1.0,
-                    ),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.14),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Icon(
-                    Icons.location_on_rounded,
+                    Icons.local_shipping_rounded,
                     color: Colors.white,
-                    size: 24,
+                    size: 22,
                   ),
                 ),
 
@@ -1071,8 +1306,8 @@ class _CoverageCalloutState extends State<_CoverageCallout>
 
                 const Expanded(
                   child: Text(
-                    'Not sure if we deliver to your location? '
-                    'Contact our team and we will help.',
+                    'Need water delivery in Dubai, Sharjah or Ajman? '
+                    'Contact our team for availability.',
                     style: TextStyle(
                       fontSize: 13,
                       height: 1.5,

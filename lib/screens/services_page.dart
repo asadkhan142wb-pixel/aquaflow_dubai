@@ -183,7 +183,7 @@ class _TopBarState extends State<_TopBar> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'AquaFlow',
+                  'Sweet Water Tankers',
                   style: TextStyle(
                     fontSize: widget.isMobile ? 18 : 21,
                     fontWeight: FontWeight.w800,
@@ -912,7 +912,7 @@ class _ServiceData {
 }
 
 // ============================================================
-// WHY AQUAFLOW
+// WHY SWEET WATER TANKERS
 // ============================================================
 
 class _WhyServices extends StatelessWidget {
@@ -976,7 +976,7 @@ class _WhyServices extends StatelessWidget {
             child: Column(
               children: [
                 const Text(
-                  'WHY AQUAFLOW',
+                  'WHY SWEET WATER TANKERS',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 12,
@@ -1322,11 +1322,11 @@ class _CtaButtonState extends State<_CtaButton> {
   bool _hovered = false;
   bool _pressed = false;
 
-  static const String whatsappNumber = '923104939138';
+  static const String whatsappNumber = '971551027786';
 
   Future<void> _openWhatsApp() async {
     final message = Uri.encodeComponent(
-      'Hello AquaFlow Dubai,\n\n'
+      'Hello Sweet Water Tankers,\n\n'
       'I would like to request a water delivery quote.\n\n'
       'Please share the available services, pricing and delivery details.',
     );
@@ -1454,7 +1454,7 @@ class _Footer extends StatelessWidget {
       decoration: const BoxDecoration(color: Color(0xFF0D2535)),
       child: const Center(
         child: Text(
-          '© 2026 AquaFlow Dubai. Reliable Water Delivery.',
+          '© 2026 Sweet Water Tankers. Reliable Water Delivery.',
           textAlign: TextAlign.center,
           style: TextStyle(color: Colors.white70, fontSize: 13),
         ),

@@ -1,10 +1,10 @@
-# aquaflow_dubai
+# Sweet Water Tankers
 
-A new Flutter project.
+Water delivery in Dubai by Sweet Water Tankers.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This repository contains the Sweet Water Tankers Flutter application.
 
 A few resources to get you started if this is your first Flutter project:
 

@@ -340,10 +340,6 @@ class _DeliveryImageState extends State<_DeliveryImage>
           child: Stack(
             fit: StackFit.expand,
             children: [
-              // ==================================================
-              // MAIN IMAGE
-              // ==================================================
-
               AnimatedScale(
                 scale: _hovering ? 1.035 : 1.0,
                 duration: const Duration(milliseconds: 600),
@@ -351,7 +347,7 @@ class _DeliveryImageState extends State<_DeliveryImage>
                 child: ScaleTransition(
                   scale: _imageScale,
                   child: Image.asset(
-                    'assets/images/how-it-works/water-delivery.jpg',
+                    'assets/images/how-it-works/water-delivery.png',
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
@@ -376,9 +372,6 @@ class _DeliveryImageState extends State<_DeliveryImage>
                 ),
               ),
 
-              // ==================================================
-              // DARK IMAGE OVERLAY
-              // ==================================================
               Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
@@ -393,9 +386,6 @@ class _DeliveryImageState extends State<_DeliveryImage>
                 ),
               ),
 
-              // ==================================================
-              // TOP BADGE
-              // ==================================================
               Positioned(
                 top: 20,
                 left: 20,
@@ -443,9 +433,6 @@ class _DeliveryImageState extends State<_DeliveryImage>
                 ),
               ),
 
-              // ==================================================
-              // BOTTOM INFORMATION
-              // ==================================================
               Positioned(
                 left: 24,
                 right: 24,
@@ -955,9 +942,9 @@ class _BottomNote extends StatefulWidget {
 
   const _BottomNote({required this.isMobile});
 
-  // Temporary contact number.
+  // Contact number.
   // Replace with the client's final WhatsApp number before launch.
-  static const String whatsappNumber = '923104939138';
+  static const String whatsappNumber = '971551027786';
 
   @override
   State<_BottomNote> createState() => _BottomNoteState();
@@ -968,7 +955,7 @@ class _BottomNoteState extends State<_BottomNote> {
 
   Future<void> _openWhatsApp() async {
     final message = Uri.encodeComponent(
-      'Hello AquaFlow Dubai, I need help choosing the right water supply.',
+      'Hello Sweet Water Tankers, I need help choosing the right water supply.',
     );
 
     final uri = Uri.parse(
@@ -982,6 +969,11 @@ class _BottomNoteState extends State<_BottomNote> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
+    // Extra protection for very narrow phones.
+    final isVerySmall = width < 380;
+
     return MouseRegion(
       cursor: SystemMouseCursors.basic,
       onEnter: (_) {
@@ -1002,7 +994,11 @@ class _BottomNoteState extends State<_BottomNote> {
           width: double.infinity,
           constraints: const BoxConstraints(maxWidth: 900),
           padding: EdgeInsets.symmetric(
-            horizontal: widget.isMobile ? 20 : 30,
+            horizontal: isVerySmall
+                ? 14
+                : widget.isMobile
+                ? 20
+                : 30,
             vertical: 20,
           ),
           decoration: BoxDecoration(
@@ -1024,11 +1020,12 @@ class _BottomNoteState extends State<_BottomNote> {
             ],
           ),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
-                width: 42,
-                height: 42,
+                width: isVerySmall ? 38 : 42,
+                height: isVerySmall ? 38 : 42,
                 decoration: BoxDecoration(
                   color: const Color(0xFFEAF8FB),
                   borderRadius: BorderRadius.circular(12),
@@ -1040,20 +1037,24 @@ class _BottomNoteState extends State<_BottomNote> {
                 ),
               ),
 
-              const SizedBox(width: 14),
+              SizedBox(width: isVerySmall ? 10 : 14),
 
               Expanded(
                 child: Text(
                   'Need help choosing the right water supply?',
-                  style: const TextStyle(
-                    fontSize: 14,
+                  maxLines: widget.isMobile ? 3 : 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: isVerySmall ? 13 : 14,
+                    height: 1.45,
                     fontWeight: FontWeight.w700,
                     color: HowItWorksSection.darkText,
                   ),
                 ),
               ),
 
-              if (!widget.isMobile)
+              if (!widget.isMobile) ...[
+                const SizedBox(width: 10),
                 TextButton(
                   onPressed: _openWhatsApp,
                   child: AnimatedDefaultTextStyle(
@@ -1068,6 +1069,7 @@ class _BottomNoteState extends State<_BottomNote> {
                     child: const Text('Talk to Us'),
                   ),
                 ),
+              ],
             ],
           ),
         ),

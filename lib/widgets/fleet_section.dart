@@ -439,14 +439,14 @@ class _TankerVisualState extends State<_TankerVisual>
     return MouseRegion(
       cursor: SystemMouseCursors.basic,
       onEnter: (_) {
-        if (!isMobile) {
+        if (!isMobile && mounted) {
           setState(() {
             _hovered = true;
           });
         }
       },
       onExit: (_) {
-        if (!isMobile) {
+        if (!isMobile && mounted) {
           setState(() {
             _hovered = false;
           });
@@ -516,7 +516,7 @@ class _TankerVisualState extends State<_TankerVisual>
                 duration: const Duration(milliseconds: 1000),
                 curve: Curves.easeOutCubic,
                 builder: (context, value, child) {
-                  final safeValue = value.clamp(0.0, 1.0);
+                  final double safeValue = value.clamp(0.0, 1.0);
 
                   return Transform.translate(
                     offset: Offset(0, (1 - safeValue) * -18),
@@ -571,7 +571,7 @@ class _TankerVisualState extends State<_TankerVisual>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'AquaFlow Dubai',
+                              'Sweet Water Tankers',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: isMobile ? 18 : 23,
@@ -683,16 +683,12 @@ class _FleetInformationState extends State<_FleetInformation> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ==================================================
-            // LABEL
-            // ==================================================
-
             TweenAnimationBuilder<double>(
               tween: Tween<double>(begin: 0.0, end: 1.0),
               duration: const Duration(milliseconds: 800),
               curve: Curves.easeOutCubic,
               builder: (context, value, child) {
-                final safeValue = value.clamp(0.0, 1.0);
+                final double safeValue = value.clamp(0.0, 1.0);
 
                 return Transform.scale(
                   scale: 0.90 + (safeValue * 0.10),
@@ -722,15 +718,12 @@ class _FleetInformationState extends State<_FleetInformation> {
 
             const SizedBox(height: 18),
 
-            // ==================================================
-            // TITLE
-            // ==================================================
             TweenAnimationBuilder<double>(
               tween: Tween<double>(begin: 0.0, end: 1.0),
               duration: const Duration(milliseconds: 850),
               curve: Curves.easeOutCubic,
               builder: (context, value, child) {
-                final safeValue = value.clamp(0.0, 1.0);
+                final double safeValue = value.clamp(0.0, 1.0);
 
                 return Transform.translate(
                   offset: Offset(0, 14 * (1 - safeValue)),
@@ -750,9 +743,6 @@ class _FleetInformationState extends State<_FleetInformation> {
 
             const SizedBox(height: 12),
 
-            // ==================================================
-            // DESCRIPTION
-            // ==================================================
             Text(
               'Our tanker fleet is prepared for scheduled and '
               'on-demand water deliveries throughout Dubai.',
@@ -765,21 +755,22 @@ class _FleetInformationState extends State<_FleetInformation> {
 
             const SizedBox(height: 22),
 
-            // ==================================================
-            // INFO ROWS
-            // ==================================================
             for (int index = 0; index < infoRows.length; index++) ...[
               MouseRegion(
                 cursor: SystemMouseCursors.basic,
                 onEnter: (_) {
-                  setState(() {
-                    _hoveredIndex = index;
-                  });
+                  if (mounted) {
+                    setState(() {
+                      _hoveredIndex = index;
+                    });
+                  }
                 },
                 onExit: (_) {
-                  setState(() {
-                    _hoveredIndex = -1;
-                  });
+                  if (mounted) {
+                    setState(() {
+                      _hoveredIndex = -1;
+                    });
+                  }
                 },
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 220),
@@ -853,6 +844,7 @@ class _InfoRow extends StatelessWidget {
           child: AnimatedScale(
             scale: hovered ? 1.08 : 1.0,
             duration: const Duration(milliseconds: 220),
+            curve: Curves.easeOutBack,
             child: Icon(data.icon, size: 21, color: FleetSection.primary),
           ),
         ),
@@ -1074,14 +1066,14 @@ class _AnimatedFleetCardState extends State<_AnimatedFleetCard>
         child: MouseRegion(
           cursor: SystemMouseCursors.basic,
           onEnter: (_) {
-            if (!widget.isMobile) {
+            if (!widget.isMobile && mounted) {
               setState(() {
                 _hovered = true;
               });
             }
           },
           onExit: (_) {
-            if (!widget.isMobile) {
+            if (!widget.isMobile && mounted) {
               setState(() {
                 _hovered = false;
               });

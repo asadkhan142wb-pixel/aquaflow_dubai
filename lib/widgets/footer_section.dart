@@ -15,9 +15,30 @@ class FooterSection extends StatefulWidget {
   static const Color primary = Color(0xFF087EA4);
   static const Color muted = Color(0xFF9CB2C0);
 
-  // Temporary development contact
-  static const String whatsappNumber = '923104939138';
-  static const String phoneNumber = '+923104939138';
+  static const String whatsappNumber = '971551027786';
+  static const String phoneNumber = '+971551027786';
+
+  // ============================================================
+  // LOGO
+  // ============================================================
+
+  static const String logoAsset = 'assets/images/favicon.png';
+
+  // ============================================================
+  // FACEBOOK URL
+  // ============================================================
+
+  static final Uri facebookUrl = Uri.parse(
+    'https://www.facebook.com/share/19d8TtjvGb/',
+  );
+
+  // ============================================================
+  // INSTAGRAM URL
+  // ============================================================
+
+  static final Uri instagramUrl = Uri.parse(
+    'https://www.instagram.com/sweet_water_tankers_889/',
+  );
 
   // ============================================================
   // WHATSAPP URL
@@ -25,7 +46,7 @@ class FooterSection extends StatefulWidget {
 
   static Uri get whatsappUrl {
     const message =
-        'Hello AquaFlow Dubai, I would like to get information about '
+        'Hello Sweet Water Tankers, I would like to get information about '
         'your water delivery service.';
 
     return Uri.https('wa.me', '/$whatsappNumber', {'text': message});
@@ -38,7 +59,6 @@ class FooterSection extends StatefulWidget {
 class _FooterSectionState extends State<FooterSection>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
-
   late final Animation<double> _fade;
   late final Animation<Offset> _slide;
 
@@ -95,6 +115,7 @@ class _FooterSectionState extends State<FooterSection>
       }
     } catch (e) {
       debugPrint('WhatsApp launch error: $e');
+
       _showMessage('Unable to open WhatsApp. Please try again.');
     }
   }
@@ -117,6 +138,7 @@ class _FooterSectionState extends State<FooterSection>
       }
     } catch (e) {
       debugPrint('Phone launch error: $e');
+
       _showMessage('Unable to open the phone dialer.');
     }
   }
@@ -141,11 +163,10 @@ class _FooterSectionState extends State<FooterSection>
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
+    final double width = MediaQuery.of(context).size.width;
 
     final bool isMobile = width < 800;
     final bool isTablet = width >= 800 && width < 1100;
-    final bool isDesktop = width >= 1100;
 
     return Container(
       width: double.infinity,
@@ -179,7 +200,6 @@ class _FooterSectionState extends State<FooterSection>
                 child: _buildResponsiveContent(
                   isMobile: isMobile,
                   isTablet: isTablet,
-                  isDesktop: isDesktop,
                 ),
               ),
               const SizedBox(height: 55),
@@ -194,19 +214,19 @@ class _FooterSectionState extends State<FooterSection>
   }
 
   // ============================================================
-  // RESPONSIVE MAIN FOOTER CONTENT
+  // RESPONSIVE MAIN CONTENT
   // ============================================================
 
   Widget _buildResponsiveContent({
     required bool isMobile,
     required bool isTablet,
-    required bool isDesktop,
   }) {
     if (isMobile) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const _Brand(),
+
           const SizedBox(height: 45),
 
           _AnimatedFooterColumn(
@@ -249,6 +269,7 @@ class _FooterSectionState extends State<FooterSection>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const _Brand(),
+
           const SizedBox(height: 50),
 
           Row(
@@ -357,7 +378,7 @@ class _FooterSectionState extends State<FooterSection>
   }
 
   // ============================================================
-  // RESPONSIVE BOTTOM SECTION
+  // BOTTOM SECTION
   // ============================================================
 
   Widget _buildBottomSection({required bool isMobile, required bool isTablet}) {
@@ -418,6 +439,72 @@ class _Brand extends StatefulWidget {
 class _BrandState extends State<_Brand> {
   bool _hoveredWhatsApp = false;
 
+  // ============================================================
+  // FACEBOOK
+  // ============================================================
+
+  Future<void> _openFacebook() async {
+    try {
+      final bool launched = await launchUrl(
+        FooterSection.facebookUrl,
+        mode: LaunchMode.platformDefault,
+      );
+
+      if (!launched && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Unable to open Facebook. Please try again.'),
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('Facebook launch error: $e');
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Unable to open Facebook. Please try again.'),
+          ),
+        );
+      }
+    }
+  }
+
+  // ============================================================
+  // INSTAGRAM
+  // ============================================================
+
+  Future<void> _openInstagram() async {
+    try {
+      final bool launched = await launchUrl(
+        FooterSection.instagramUrl,
+        mode: LaunchMode.platformDefault,
+      );
+
+      if (!launched && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Unable to open Instagram. Please try again.'),
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('Instagram launch error: $e');
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Unable to open Instagram. Please try again.'),
+          ),
+        );
+      }
+    }
+  }
+
+  // ============================================================
+  // WHATSAPP
+  // ============================================================
+
   Future<void> _openWhatsApp() async {
     try {
       final bool launched = await launchUrl(
@@ -463,7 +550,12 @@ class _BrandState extends State<_Brand> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // ========================================================
+          // LOGO + BRAND NAME
+          // ========================================================
+
           Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               TweenAnimationBuilder<double>(
                 tween: Tween<double>(begin: 0.0, end: 1.0),
@@ -471,28 +563,51 @@ class _BrandState extends State<_Brand> {
                 curve: Curves.easeOutBack,
                 builder: (context, value, child) {
                   return Transform.scale(
-                    scale: 0.75 + (value * 0.25),
+                    scale: 0.82 + (value * 0.18),
                     child: child,
                   );
                 },
                 child: Container(
-                  width: 44,
-                  height: 44,
+                  width: 48,
+                  height: 48,
+                  padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
-                    color: FooterSection.primary,
-                    borderRadius: BorderRadius.circular(13),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(14),
                     boxShadow: [
                       BoxShadow(
-                        color: FooterSection.primary.withValues(alpha: 0.28),
-                        blurRadius: 18,
-                        offset: const Offset(0, 8),
+                        color: Colors.black.withValues(alpha: 0.18),
+                        blurRadius: 16,
+                        offset: const Offset(0, 7),
                       ),
                     ],
                   ),
-                  child: const Icon(
-                    Icons.water_drop_rounded,
-                    color: Colors.white,
-                    size: 25,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(9),
+                    child: Image.asset(
+                      FooterSection.logoAsset,
+                      width: 36,
+                      height: 36,
+                      fit: BoxFit.contain,
+                      alignment: Alignment.center,
+                      filterQuality: FilterQuality.high,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          width: 36,
+                          height: 36,
+                          decoration: BoxDecoration(
+                            color: FooterSection.primary,
+                            borderRadius: BorderRadius.circular(9),
+                          ),
+                          alignment: Alignment.center,
+                          child: const Icon(
+                            Icons.water_drop_rounded,
+                            color: Colors.white,
+                            size: 23,
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
@@ -501,7 +616,7 @@ class _BrandState extends State<_Brand> {
 
               const Flexible(
                 child: Text(
-                  'AquaFlow',
+                  'Sweet Water',
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontSize: 22,
@@ -512,6 +627,21 @@ class _BrandState extends State<_Brand> {
                 ),
               ),
             ],
+          ),
+
+          const SizedBox(height: 3),
+
+          const Padding(
+            padding: EdgeInsets.only(left: 60),
+            child: Text(
+              'TANKERS',
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 2.4,
+                color: FooterSection.primary,
+              ),
+            ),
           ),
 
           const SizedBox(height: 20),
@@ -529,27 +659,40 @@ class _BrandState extends State<_Brand> {
 
           const SizedBox(height: 22),
 
+          // ========================================================
+          // SOCIAL BUTTONS
+          // ========================================================
           Row(
             children: [
-              _SocialButton(icon: Icons.facebook_rounded, onTap: () {}),
+              // FACEBOOK
+              _SocialButton(icon: Icons.facebook_rounded, onTap: _openFacebook),
 
               const SizedBox(width: 9),
 
-              _SocialButton(icon: Icons.camera_alt_rounded, onTap: () {}),
+              // INSTAGRAM
+              _SocialButton(
+                icon: Icons.camera_alt_rounded,
+                onTap: _openInstagram,
+              ),
 
               const SizedBox(width: 9),
 
+              // WHATSAPP
               MouseRegion(
                 cursor: SystemMouseCursors.click,
                 onEnter: (_) {
-                  setState(() {
-                    _hoveredWhatsApp = true;
-                  });
+                  if (mounted) {
+                    setState(() {
+                      _hoveredWhatsApp = true;
+                    });
+                  }
                 },
                 onExit: (_) {
-                  setState(() {
-                    _hoveredWhatsApp = false;
-                  });
+                  if (mounted) {
+                    setState(() {
+                      _hoveredWhatsApp = false;
+                    });
+                  }
                 },
                 child: AnimatedScale(
                   scale: _hoveredWhatsApp ? 1.08 : 1.0,
@@ -639,11 +782,8 @@ class _FooterColumn extends StatelessWidget {
 
   void _openPage(BuildContext context, String item) {
     if (item == 'Home') {
-      // Return to the existing Home route.
       Navigator.of(context).popUntil((route) => route.isFirst);
 
-      // Reset the Home page scroll position if a callback
-      // was provided by the parent.
       onHome?.call();
       return;
     }
@@ -700,7 +840,9 @@ class _FooterColumn extends StatelessWidget {
             key: ValueKey('$title-$item'),
             item: item,
             index: index,
-            onTap: () => _openPage(context, item),
+            onTap: () {
+              _openPage(context, item);
+            },
           );
         }),
       ],
@@ -738,14 +880,18 @@ class _AnimatedFooterLinkState extends State<_AnimatedFooterLink> {
       child: MouseRegion(
         cursor: SystemMouseCursors.click,
         onEnter: (_) {
-          setState(() {
-            _hovered = true;
-          });
+          if (mounted) {
+            setState(() {
+              _hovered = true;
+            });
+          }
         },
         onExit: (_) {
-          setState(() {
-            _hovered = false;
-          });
+          if (mounted) {
+            setState(() {
+              _hovered = false;
+            });
+          }
         },
         child: InkWell(
           onTap: widget.onTap,
@@ -873,7 +1019,15 @@ class _ContactColumn extends StatelessWidget {
 
         _ContactItem(
           icon: Icons.phone_rounded,
-          text: '+92 310 4939138',
+          text: '+971551027786',
+          onTap: onCall,
+        ),
+
+        const SizedBox(height: 20),
+
+        _ContactItem(
+          icon: Icons.phone_rounded,
+          text: '+971508385964',
           onTap: onCall,
         ),
 
@@ -889,14 +1043,14 @@ class _ContactColumn extends StatelessWidget {
 
         const _ContactItem(
           icon: Icons.email_rounded,
-          text: 'info@aquaflowdubai.com',
+          text: 'Javedrasheed78@gmail.com',
         ),
 
         const SizedBox(height: 15),
 
         const _ContactItem(
           icon: Icons.location_on_rounded,
-          text: 'Dubai, United Arab Emirates',
+          text: 'Dubai, Ajman, Sharjah',
         ),
       ],
     );
@@ -970,14 +1124,18 @@ class _ContactItemState extends State<_ContactItem> {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       onEnter: (_) {
-        setState(() {
-          _hovered = true;
-        });
+        if (mounted) {
+          setState(() {
+            _hovered = true;
+          });
+        }
       },
       onExit: (_) {
-        setState(() {
-          _hovered = false;
-        });
+        if (mounted) {
+          setState(() {
+            _hovered = false;
+          });
+        }
       },
       child: InkWell(
         onTap: widget.onTap,
@@ -1013,14 +1171,18 @@ class _SocialButtonState extends State<_SocialButton> {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       onEnter: (_) {
-        setState(() {
-          _hovered = true;
-        });
+        if (mounted) {
+          setState(() {
+            _hovered = true;
+          });
+        }
       },
       onExit: (_) {
-        setState(() {
-          _hovered = false;
-        });
+        if (mounted) {
+          setState(() {
+            _hovered = false;
+          });
+        }
       },
       child: GestureDetector(
         onTap: widget.onTap,
@@ -1137,7 +1299,7 @@ class _AnimatedCopyright extends StatelessWidget {
         );
       },
       child: const Text(
-        '© 2026 AquaFlow Dubai. All rights reserved.',
+        '© 2026 Sweet Water Tankers. All rights reserved.',
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 12, color: FooterSection.muted),
       ),
@@ -1163,8 +1325,20 @@ class _DeveloperCreditState extends State<_DeveloperCredit> {
   Widget build(BuildContext context) {
     return MouseRegion(
       cursor: SystemMouseCursors.basic,
-      onEnter: (_) => setState(() => _hovered = true),
-      onExit: (_) => setState(() => _hovered = false),
+      onEnter: (_) {
+        if (mounted) {
+          setState(() {
+            _hovered = true;
+          });
+        }
+      },
+      onExit: (_) {
+        if (mounted) {
+          setState(() {
+            _hovered = false;
+          });
+        }
+      },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeOutCubic,
@@ -1362,7 +1536,7 @@ class _BottomLinksState extends State<_BottomLinks> {
   }
 
   static const String _privacyText =
-      'AquaFlow Dubai respects your privacy. Information '
+      'Sweet Water Tankers respects your privacy. Information '
       'submitted through this website may be used to respond '
       'to your water delivery requests, quotations, enquiries '
       'and customer service communications.\n\n'
@@ -1375,13 +1549,12 @@ class _BottomLinksState extends State<_BottomLinks> {
       'business owner before the website is published.';
 
   static const String _termsText =
-      'By using this website, you acknowledge that the '
-      'information presented is provided for general service '
-      'and enquiry purposes.\n\n'
-      'Water delivery requests, pricing, availability, '
-      'delivery times and service conditions may depend on '
-      'location, quantity, water requirements and operational '
-      'availability.\n\n'
+      'By using the Sweet Water Tankers website, you acknowledge '
+      'that the information presented is provided for general '
+      'service and enquiry purposes.\n\n'
+      'Water delivery requests, pricing, availability, delivery '
+      'times and service conditions may depend on location, '
+      'quantity, water requirements and operational availability.\n\n'
       'This website is currently under development. The final '
       'terms and conditions should be reviewed and approved '
       'by the business owner before the website is published.';
@@ -1397,14 +1570,18 @@ class _BottomLinksState extends State<_BottomLinks> {
           title: 'Privacy Policy',
           hovered: _hovered == 'privacy',
           onEnter: () {
-            setState(() {
-              _hovered = 'privacy';
-            });
+            if (mounted) {
+              setState(() {
+                _hovered = 'privacy';
+              });
+            }
           },
           onExit: () {
-            setState(() {
-              _hovered = null;
-            });
+            if (mounted) {
+              setState(() {
+                _hovered = null;
+              });
+            }
           },
           onTap: () {
             _showLegalDialog(context, 'Privacy Policy');
@@ -1415,14 +1592,18 @@ class _BottomLinksState extends State<_BottomLinks> {
           title: 'Terms & Conditions',
           hovered: _hovered == 'terms',
           onEnter: () {
-            setState(() {
-              _hovered = 'terms';
-            });
+            if (mounted) {
+              setState(() {
+                _hovered = 'terms';
+              });
+            }
           },
           onExit: () {
-            setState(() {
-              _hovered = null;
-            });
+            if (mounted) {
+              setState(() {
+                _hovered = null;
+              });
+            }
           },
           onTap: () {
             _showLegalDialog(context, 'Terms & Conditions');

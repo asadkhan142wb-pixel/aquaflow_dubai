@@ -9,9 +9,9 @@ class QuoteSection extends StatefulWidget {
   static const Color dark = Color(0xFF08263A);
   static const Color bodyText = Color(0xFF52667A);
 
-  // Temporary WhatsApp number.
+  // WhatsApp number.
   // Change this later when the client's real number is available.
-  static const String whatsappNumber = '923104939138';
+  static const String whatsappNumber = '971551027786';
 
   // ============================================================
   // STANDARD SERVICE LIST
@@ -279,7 +279,7 @@ class _QuoteSectionState extends State<QuoteSection>
 
     final message =
         '''
-Hello AquaFlow Dubai,
+Hello Sweet Water Tankers,
 
 I would like to request a water delivery quote.
 

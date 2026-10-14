@@ -10,7 +10,9 @@ class HeroSection extends StatefulWidget {
   static const Color darkText = Color(0xFF102A43);
   static const Color bodyText = Color(0xFF52667A);
 
-  static const String phoneNumber = '+923104939138';
+  // Contact number.
+  // Replace with the client's final number before launch.
+  static const String phoneNumber = '+971551027786';
 
   @override
   State<HeroSection> createState() => _HeroSectionState();
@@ -79,7 +81,7 @@ class _HeroSectionState extends State<HeroSection>
     );
 
     // ==========================================================
-    // AVAILABILITY BADGE
+    // AVAILABILITY / BRAND BADGE
     // ==========================================================
 
     _badgeFade = CurvedAnimation(
@@ -256,11 +258,18 @@ class _HeroSectionState extends State<HeroSection>
 
     final bool isMobile = width < 850;
     final bool isSmallMobile = width < 600;
+    final bool isVerySmallMobile = width < 380;
     final bool isTablet = width >= 850 && width < 1200;
 
     return Container(
       width: double.infinity,
-      constraints: BoxConstraints(minHeight: isMobile ? 720 : 650),
+      constraints: BoxConstraints(
+        minHeight: isVerySmallMobile
+            ? 680
+            : isMobile
+            ? 720
+            : 650,
+      ),
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -269,6 +278,7 @@ class _HeroSectionState extends State<HeroSection>
         ),
       ),
       child: Stack(
+        clipBehavior: Clip.hardEdge,
         children: [
           // ======================================================
           // ANIMATED BACKGROUND GLOW 1
@@ -328,14 +338,20 @@ class _HeroSectionState extends State<HeroSection>
           // ======================================================
           Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: isSmallMobile
+              horizontal: isVerySmallMobile
+                  ? 16
+                  : isSmallMobile
                   ? 20
                   : isMobile
                   ? 28
                   : isTablet
                   ? 45
                   : 70,
-              vertical: isMobile ? 50 : 75,
+              vertical: isVerySmallMobile
+                  ? 42
+                  : isMobile
+                  ? 50
+                  : 75,
             ),
             child: isMobile
                 ? _mobileContent(context)
@@ -358,9 +374,9 @@ class _HeroSectionState extends State<HeroSection>
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Expanded(flex: isLargeDesktop ? 5 : 5, child: _textContent(context)),
+        Expanded(flex: 5, child: _textContent(context)),
         SizedBox(width: isLargeDesktop ? 70 : 50),
-        Expanded(flex: isLargeDesktop ? 5 : 5, child: _animatedHeroImage()),
+        Expanded(flex: 5, child: _animatedHeroImage()),
       ],
     );
   }
@@ -376,7 +392,9 @@ class _HeroSectionState extends State<HeroSection>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _textContent(context),
+
         SizedBox(height: width < 600 ? 40 : 45),
+
         _animatedHeroImage(),
       ],
     );
@@ -389,6 +407,7 @@ class _HeroSectionState extends State<HeroSection>
   Widget _textContent(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
 
+    final bool isVerySmallMobile = width < 380;
     final bool isSmallMobile = width < 400;
     final bool isMobile = width < 600;
     final bool isTablet = width >= 850 && width < 1200;
@@ -396,7 +415,9 @@ class _HeroSectionState extends State<HeroSection>
 
     final double headingSize;
 
-    if (isSmallMobile) {
+    if (isVerySmallMobile) {
+      headingSize = 31;
+    } else if (isSmallMobile) {
       headingSize = 34;
     } else if (isMobile) {
       headingSize = 42;
@@ -412,9 +433,30 @@ class _HeroSectionState extends State<HeroSection>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // ======================================================
-        // AVAILABILITY BADGE
+        // BRAND NAME
         // ======================================================
 
+        FadeTransition(
+          opacity: _badgeFade,
+          child: SlideTransition(
+            position: _badgeSlide,
+            child: Text(
+              'SWEET WATER TANKERS',
+              style: TextStyle(
+                fontSize: isVerySmallMobile ? 12 : 14,
+                fontWeight: FontWeight.w800,
+                letterSpacing: isVerySmallMobile ? 1.3 : 1.8,
+                color: HeroSection.primary,
+              ),
+            ),
+          ),
+        ),
+
+        const SizedBox(height: 12),
+
+        // ======================================================
+        // AVAILABILITY BADGE
+        // ======================================================
         FadeTransition(
           opacity: _badgeFade,
           child: SlideTransition(
@@ -437,9 +479,9 @@ class _HeroSectionState extends State<HeroSection>
                 children: [
                   const TextSpan(text: 'Reliable Water,\n'),
                   const TextSpan(text: 'Delivered '),
-                  TextSpan(
+                  const TextSpan(
                     text: 'When You Need It.',
-                    style: const TextStyle(color: HeroSection.primary),
+                    style: TextStyle(color: HeroSection.primary),
                   ),
                 ],
               ),
@@ -448,7 +490,7 @@ class _HeroSectionState extends State<HeroSection>
                 height: 1.05,
                 fontWeight: FontWeight.w800,
                 color: HeroSection.darkText,
-                letterSpacing: -1.5,
+                letterSpacing: isVerySmallMobile ? -1.0 : -1.5,
               ),
             ),
           ),
@@ -468,7 +510,7 @@ class _HeroSectionState extends State<HeroSection>
               'for swimming pools, homes, businesses and '
               'construction sites across Dubai.',
               style: TextStyle(
-                fontSize: isSmallMobile ? 15 : 17,
+                fontSize: isVerySmallMobile ? 15 : 17,
                 height: 1.7,
                 color: HeroSection.bodyText,
               ),
@@ -502,10 +544,10 @@ class _HeroSectionState extends State<HeroSection>
           opacity: _trustFade,
           child: SlideTransition(
             position: _trustSlide,
-            child: Wrap(
+            child: const Wrap(
               spacing: 22,
               runSpacing: 12,
-              children: const [
+              children: [
                 _TrustPoint(
                   icon: Icons.verified_rounded,
                   text: 'Reliable Service',
@@ -534,11 +576,15 @@ class _HeroSectionState extends State<HeroSection>
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       onEnter: (_) {
+        if (!mounted) return;
+
         setState(() {
           _waterButtonHover = true;
         });
       },
       onExit: (_) {
+        if (!mounted) return;
+
         setState(() {
           _waterButtonHover = false;
         });
@@ -574,11 +620,15 @@ class _HeroSectionState extends State<HeroSection>
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       onEnter: (_) {
+        if (!mounted) return;
+
         setState(() {
           _callButtonHover = true;
         });
       },
       onExit: (_) {
+        if (!mounted) return;
+
         setState(() {
           _callButtonHover = false;
         });
@@ -612,6 +662,9 @@ class _HeroSectionState extends State<HeroSection>
   // ============================================================
 
   Widget _buildAvailabilityBadge() {
+    final width = MediaQuery.of(context).size.width;
+    final bool isVerySmallMobile = width < 380;
+
     return AnimatedBuilder(
       animation: _badgePulse,
       builder: (context, child) {
@@ -622,7 +675,10 @@ class _HeroSectionState extends State<HeroSection>
         );
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        padding: EdgeInsets.symmetric(
+          horizontal: isVerySmallMobile ? 11 : 14,
+          vertical: 8,
+        ),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(30),
@@ -635,17 +691,19 @@ class _HeroSectionState extends State<HeroSection>
             ),
           ],
         ),
-        child: const Row(
+        child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.circle, size: 9, color: Color(0xFF16A085)),
-            SizedBox(width: 8),
-            Text(
-              '24/7 Water Delivery in Dubai',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w700,
-                color: Color(0xFF245B6A),
+            const Icon(Icons.circle, size: 9, color: Color(0xFF16A085)),
+            const SizedBox(width: 8),
+            Flexible(
+              child: Text(
+                '24/7 Water Delivery in Dubai',
+                style: TextStyle(
+                  fontSize: isVerySmallMobile ? 11.5 : 13,
+                  fontWeight: FontWeight.w700,
+                  color: const Color(0xFF245B6A),
+                ),
               ),
             ),
           ],
@@ -677,11 +735,15 @@ class _HeroSectionState extends State<HeroSection>
         child: MouseRegion(
           cursor: SystemMouseCursors.basic,
           onEnter: (_) {
+            if (!mounted) return;
+
             setState(() {
               _imageHover = true;
             });
           },
           onExit: (_) {
+            if (!mounted) return;
+
             setState(() {
               _imageHover = false;
             });
@@ -703,7 +765,9 @@ class _HeroSectionState extends State<HeroSection>
 
         final double imageHeight;
 
-        if (width < 500) {
+        if (width < 380) {
+          imageHeight = 255;
+        } else if (width < 500) {
           imageHeight = 300;
         } else if (width < 700) {
           imageHeight = 360;
@@ -712,6 +776,8 @@ class _HeroSectionState extends State<HeroSection>
         } else {
           imageHeight = 470;
         }
+
+        final bool isVerySmallMobile = width < 380;
 
         return Container(
           height: imageHeight,
@@ -775,8 +841,8 @@ class _HeroSectionState extends State<HeroSection>
                 // PREMIUM LABEL
                 // ==================================================
                 Positioned(
-                  left: 24,
-                  bottom: 24,
+                  left: isVerySmallMobile ? 14 : 24,
+                  bottom: isVerySmallMobile ? 14 : 24,
                   child: TweenAnimationBuilder<double>(
                     tween: Tween(begin: 0.0, end: 1.0),
                     duration: const Duration(milliseconds: 900),
@@ -791,9 +857,9 @@ class _HeroSectionState extends State<HeroSection>
                       );
                     },
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 18,
-                        vertical: 12,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: isVerySmallMobile ? 12 : 18,
+                        vertical: isVerySmallMobile ? 9 : 12,
                       ),
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.92),
@@ -806,20 +872,20 @@ class _HeroSectionState extends State<HeroSection>
                           ),
                         ],
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.water_drop_rounded,
                             color: HeroSection.primary,
                             size: 20,
                           ),
-                          SizedBox(width: 8),
+                          const SizedBox(width: 8),
                           Text(
                             'Premium Water Delivery',
                             style: TextStyle(
                               color: HeroSection.darkText,
-                              fontSize: 14,
+                              fontSize: isVerySmallMobile ? 11.5 : 14,
                               fontWeight: FontWeight.w800,
                             ),
                           ),
@@ -833,8 +899,8 @@ class _HeroSectionState extends State<HeroSection>
                 // 24/7 BADGE
                 // ==================================================
                 Positioned(
-                  right: 20,
-                  top: 20,
+                  right: isVerySmallMobile ? 12 : 20,
+                  top: isVerySmallMobile ? 12 : 20,
                   child: TweenAnimationBuilder<double>(
                     tween: Tween(begin: 0.0, end: 1.0),
                     duration: const Duration(milliseconds: 1000),
@@ -849,8 +915,8 @@ class _HeroSectionState extends State<HeroSection>
                       );
                     },
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 13,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: isVerySmallMobile ? 10 : 13,
                         vertical: 9,
                       ),
                       decoration: BoxDecoration(
@@ -864,16 +930,16 @@ class _HeroSectionState extends State<HeroSection>
                           ),
                         ],
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.access_time_rounded,
                             color: Colors.white,
                             size: 16,
                           ),
-                          SizedBox(width: 6),
-                          Text(
+                          const SizedBox(width: 6),
+                          const Text(
                             '24/7',
                             style: TextStyle(
                               color: Colors.white,
@@ -917,11 +983,15 @@ class _TrustPointState extends State<_TrustPoint> {
     return MouseRegion(
       cursor: SystemMouseCursors.basic,
       onEnter: (_) {
+        if (!mounted) return;
+
         setState(() {
           _hover = true;
         });
       },
       onExit: (_) {
+        if (!mounted) return;
+
         setState(() {
           _hover = false;
         });

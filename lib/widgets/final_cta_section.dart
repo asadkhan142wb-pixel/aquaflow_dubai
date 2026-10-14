@@ -9,11 +9,11 @@ class FinalCtaSection extends StatelessWidget {
   static const Color bodyText = Color(0xFF52667A);
 
   // ============================================================
-  // TEMPORARY CONTACT NUMBER
+  // CONTACT NUMBER
   // ============================================================
 
-  static const String whatsappNumber = '923104939138';
-  static const String phoneNumber = '+923104939138';
+  static const String whatsappNumber = '971551027786';
+  static const String phoneNumber = '+971551027786';
 
   // ============================================================
   // WHATSAPP URL
@@ -21,8 +21,8 @@ class FinalCtaSection extends StatelessWidget {
 
   static Uri get whatsappUrl {
     const message =
-        'Hello AquaFlow Dubai, I would like to get information about '
-        'your water delivery service.';
+        'Hello Sweet Water Tankers, I would like to get information '
+        'about your water delivery service.';
 
     return Uri.https('wa.me', '/$whatsappNumber', {'text': message});
   }
@@ -59,7 +59,7 @@ class FinalCtaSection extends StatelessWidget {
 
   static Future<void> requestQuote() async {
     const message =
-        'Hello AquaFlow Dubai,\n\n'
+        'Hello Sweet Water Tankers,\n\n'
         'I would like to request a free water delivery quote.\n\n'
         'Please provide your available water tanker options, '
         'pricing, and delivery availability.\n\n'

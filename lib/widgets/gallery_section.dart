@@ -77,19 +77,27 @@ class _GallerySectionState extends State<GallerySection>
     return LayoutBuilder(
       builder: (context, constraints) {
         final width = constraints.maxWidth;
-        final isMobile = width < 800;
-        final isTablet = width >= 800 && width < 1100;
+
+        final bool isVerySmallMobile = width < 380;
+        final bool isMobile = width < 800;
+        final bool isTablet = width >= 800 && width < 1100;
 
         return Container(
           width: double.infinity,
           color: Colors.white,
           padding: EdgeInsets.symmetric(
-            horizontal: isMobile
+            horizontal: isVerySmallMobile
+                ? 14
+                : isMobile
                 ? 20
                 : isTablet
                 ? 35
                 : 70,
-            vertical: isMobile ? 65 : 105,
+            vertical: isVerySmallMobile
+                ? 55
+                : isMobile
+                ? 65
+                : 105,
           ),
           child: Column(
             children: [
@@ -101,11 +109,27 @@ class _GallerySectionState extends State<GallerySection>
                 ),
               ),
 
-              SizedBox(height: isMobile ? 38 : 55),
+              SizedBox(
+                height: isVerySmallMobile
+                    ? 32
+                    : isMobile
+                    ? 38
+                    : 55,
+              ),
 
-              _GalleryGrid(isMobile: isMobile, isTablet: isTablet),
+              _GalleryGrid(
+                isMobile: isMobile,
+                isTablet: isTablet,
+                isVerySmallMobile: isVerySmallMobile,
+              ),
 
-              SizedBox(height: isMobile ? 35 : 45),
+              SizedBox(
+                height: isVerySmallMobile
+                    ? 30
+                    : isMobile
+                    ? 35
+                    : 45,
+              ),
 
               FadeTransition(
                 opacity: _buttonFade,
@@ -133,6 +157,9 @@ class _Heading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final bool isVerySmallMobile = width < 380;
+
     return Column(
       children: [
         TweenAnimationBuilder<double>(
@@ -143,7 +170,10 @@ class _Heading extends StatelessWidget {
             return Transform.scale(scale: scale, child: child);
           },
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+            padding: EdgeInsets.symmetric(
+              horizontal: isVerySmallMobile ? 12 : 15,
+              vertical: 8,
+            ),
             decoration: BoxDecoration(
               color: const Color(0xFFEAF8FB),
               borderRadius: BorderRadius.circular(30),
@@ -173,7 +203,11 @@ class _Heading extends StatelessWidget {
           'Our Work in Action',
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: isMobile ? 31 : 44,
+            fontSize: isVerySmallMobile
+                ? 29
+                : isMobile
+                ? 31
+                : 44,
             height: 1.15,
             fontWeight: FontWeight.w800,
             letterSpacing: -0.8,
@@ -185,12 +219,12 @@ class _Heading extends StatelessWidget {
 
         ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 650),
-          child: const Text(
+          child: Text(
             'A look at our water delivery operations, tanker fleet '
             'and professional service across Dubai.',
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: isVerySmallMobile ? 14.5 : 16,
               height: 1.7,
               color: GallerySection.bodyText,
             ),
@@ -208,8 +242,13 @@ class _Heading extends StatelessWidget {
 class _GalleryGrid extends StatelessWidget {
   final bool isMobile;
   final bool isTablet;
+  final bool isVerySmallMobile;
 
-  const _GalleryGrid({required this.isMobile, required this.isTablet});
+  const _GalleryGrid({
+    required this.isMobile,
+    required this.isTablet,
+    required this.isVerySmallMobile,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -256,7 +295,7 @@ class _GalleryGrid extends StatelessWidget {
               ),
               child: _GalleryCard(
                 item: items[index],
-                height: 260,
+                height: isVerySmallMobile ? 235 : 260,
                 delay: index * 100,
               ),
             ),
@@ -345,17 +384,19 @@ class _GalleryCardState extends State<_GalleryCard>
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final isMobile = width < 800;
+
+    final bool isVerySmallMobile = width < 380;
+    final bool isMobile = width < 800;
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       onEnter: (_) {
-        if (!isMobile) {
+        if (!isMobile && mounted) {
           setState(() => _hovering = true);
         }
       },
       onExit: (_) {
-        if (!isMobile) {
+        if (!isMobile && mounted) {
           setState(() => _hovering = false);
         }
       },
@@ -449,8 +490,8 @@ class _GalleryCardState extends State<_GalleryCard>
                   // CATEGORY
                   // ==================================================
                   Positioned(
-                    top: 15,
-                    left: 15,
+                    top: isVerySmallMobile ? 12 : 15,
+                    left: isVerySmallMobile ? 12 : 15,
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 300),
                       transform: Matrix4.translationValues(
@@ -458,8 +499,8 @@ class _GalleryCardState extends State<_GalleryCard>
                         _hovering ? 2 : 0,
                         0,
                       ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 11,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: isVerySmallMobile ? 9 : 11,
                         vertical: 7,
                       ),
                       decoration: BoxDecoration(
@@ -477,13 +518,13 @@ class _GalleryCardState extends State<_GalleryCard>
                       ),
                       child: Text(
                         widget.item.category.isEmpty
-                            ? 'AQUAFLOW DUBAI'
+                            ? 'SWEET WATER TANKERS'
                             : widget.item.category,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: GallerySection.primary,
-                          fontSize: 9,
+                          fontSize: isVerySmallMobile ? 8 : 9,
                           fontWeight: FontWeight.w900,
-                          letterSpacing: 1,
+                          letterSpacing: isVerySmallMobile ? 0.7 : 1,
                         ),
                       ),
                     ),
@@ -493,9 +534,9 @@ class _GalleryCardState extends State<_GalleryCard>
                   // BOTTOM INFORMATION
                   // ==================================================
                   Positioned(
-                    left: 16,
-                    right: 16,
-                    bottom: 16,
+                    left: isVerySmallMobile ? 12 : 16,
+                    right: isVerySmallMobile ? 12 : 16,
+                    bottom: isVerySmallMobile ? 12 : 16,
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
@@ -507,8 +548,8 @@ class _GalleryCardState extends State<_GalleryCard>
                                 widget.item.title,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  fontSize: 15,
+                                style: TextStyle(
+                                  fontSize: isVerySmallMobile ? 14 : 15,
                                   fontWeight: FontWeight.w800,
                                   color: Colors.white,
                                 ),
@@ -519,7 +560,7 @@ class _GalleryCardState extends State<_GalleryCard>
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                  fontSize: 10.5,
+                                  fontSize: isVerySmallMobile ? 10 : 10.5,
                                   color: Colors.white.withValues(alpha: 0.82),
                                 ),
                               ),
@@ -527,7 +568,7 @@ class _GalleryCardState extends State<_GalleryCard>
                           ),
                         ),
 
-                        const SizedBox(width: 12),
+                        const SizedBox(width: 10),
 
                         AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
@@ -537,8 +578,16 @@ class _GalleryCardState extends State<_GalleryCard>
                             _hovering ? -3 : 0,
                             0,
                           ),
-                          width: _hovering ? 42 : 38,
-                          height: _hovering ? 42 : 38,
+                          width: isVerySmallMobile
+                              ? 34
+                              : _hovering
+                              ? 42
+                              : 38,
+                          height: isVerySmallMobile
+                              ? 34
+                              : _hovering
+                              ? 42
+                              : 38,
                           decoration: BoxDecoration(
                             color: Colors.white.withValues(alpha: 0.92),
                             shape: BoxShape.circle,
@@ -546,9 +595,9 @@ class _GalleryCardState extends State<_GalleryCard>
                           child: AnimatedRotation(
                             turns: _hovering ? -0.08 : 0,
                             duration: const Duration(milliseconds: 300),
-                            child: const Icon(
+                            child: Icon(
                               Icons.arrow_outward_rounded,
-                              size: 17,
+                              size: isVerySmallMobile ? 15 : 17,
                               color: GallerySection.primary,
                             ),
                           ),
@@ -587,12 +636,17 @@ class _GalleryButtonState extends State<_GalleryButton> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final bool isVerySmallMobile = width < 380;
+
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       onEnter: (_) {
+        if (!mounted) return;
         setState(() => _hovering = true);
       },
       onExit: (_) {
+        if (!mounted) return;
         setState(() => _hovering = false);
       },
       child: AnimatedContainer(
@@ -616,17 +670,26 @@ class _GalleryButtonState extends State<_GalleryButton> {
           icon: AnimatedRotation(
             turns: _hovering ? 0.03 : 0,
             duration: const Duration(milliseconds: 250),
-            child: const Icon(Icons.photo_library_outlined, size: 19),
+            child: Icon(
+              Icons.photo_library_outlined,
+              size: isVerySmallMobile ? 17 : 19,
+            ),
           ),
-          label: const Text(
+          label: Text(
             'View Full Gallery',
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
+            style: TextStyle(
+              fontSize: isVerySmallMobile ? 13 : 14,
+              fontWeight: FontWeight.w800,
+            ),
           ),
           style: ElevatedButton.styleFrom(
             backgroundColor: GallerySection.primary,
             foregroundColor: Colors.white,
             elevation: 0,
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            padding: EdgeInsets.symmetric(
+              horizontal: isVerySmallMobile ? 18 : 24,
+              vertical: 16,
+            ),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(14),
             ),

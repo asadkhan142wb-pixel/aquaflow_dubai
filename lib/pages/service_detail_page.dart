@@ -209,7 +209,7 @@ class _TopBarState extends State<_TopBar> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'AquaFlow',
+                  'Sweet Water Tankers',
                   style: TextStyle(
                     fontSize: widget.isMobile ? 18 : 20,
                     fontWeight: FontWeight.w800,
@@ -540,10 +540,10 @@ class _HeroTextState extends State<_HeroText> {
   bool _buttonPressed = false;
 
   Future<void> _openWhatsApp({required String serviceTitle}) async {
-    const whatsappNumber = '923104939138';
+    const whatsappNumber = '971551027786';
 
     final message = Uri.encodeComponent(
-      'Hello AquaFlow Dubai,\n\n'
+      'Hello Sweet Water Tankers,\n\n'
       'I would like to request a quote for:\n'
       '$serviceTitle\n\n'
       'Please share the details and pricing.',
@@ -581,7 +581,7 @@ class _HeroTextState extends State<_HeroText> {
               borderRadius: BorderRadius.circular(30),
             ),
             child: const Text(
-              'AQUAFLOW DUBAI',
+              'SWEET WATER TANKERS',
               style: TextStyle(
                 color: primary,
                 fontSize: 10,
@@ -1306,10 +1306,10 @@ class _QuoteButtonState extends State<_QuoteButton> {
   bool _pressed = false;
 
   Future<void> _openWhatsApp() async {
-    const whatsappNumber = '923104939138';
+    const whatsappNumber = '971551027786';
 
     final message = Uri.encodeComponent(
-      'Hello AquaFlow Dubai,\n\n'
+      'Hello Sweet Water Tankers,\n\n'
       'I would like to request a quote for:\n'
       '${widget.serviceTitle}\n\n'
       'Please share the details and pricing.',
@@ -1444,7 +1444,7 @@ class _Footer extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
       color: const Color(0xFF0D2535),
       child: const Text(
-        '© 2026 AquaFlow Dubai. Reliable Water Delivery.',
+        '© 2026 Sweet Water Tankers. Reliable Water Delivery.',
         textAlign: TextAlign.center,
         style: TextStyle(color: Colors.white70, fontSize: 13),
       ),

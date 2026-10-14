@@ -174,12 +174,12 @@ class _AboutVisualState extends State<_AboutVisual>
       aspectRatio: isMobile ? 1.15 : 0.95,
       child: MouseRegion(
         onEnter: (_) {
-          if (!isMobile) {
+          if (!isMobile && mounted) {
             setState(() => _hovering = true);
           }
         },
         onExit: (_) {
-          if (!isMobile) {
+          if (!isMobile && mounted) {
             setState(() => _hovering = false);
           }
         },
@@ -515,7 +515,7 @@ class _AboutContent extends StatelessWidget {
               border: Border.all(color: const Color(0xFFB9E8F1)),
             ),
             child: const Text(
-              'ABOUT AQUAFLOW',
+              'ABOUT SWEET WATER TANKERS',
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w800,
@@ -569,7 +569,7 @@ class _AboutContent extends StatelessWidget {
             );
           },
           child: const Text(
-            'AquaFlow Dubai provides dependable water delivery '
+            'Sweet Water Tankers provides dependable water delivery '
             'solutions for homes, businesses, construction sites, '
             'gardens and swimming pools across Dubai.',
             style: TextStyle(
@@ -673,8 +673,16 @@ class _AnimatedBenefitItemState extends State<_AnimatedBenefitItem> {
         );
       },
       child: MouseRegion(
-        onEnter: (_) => setState(() => _hovering = true),
-        onExit: (_) => setState(() => _hovering = false),
+        onEnter: (_) {
+          if (mounted) {
+            setState(() => _hovering = true);
+          }
+        },
+        onExit: (_) {
+          if (mounted) {
+            setState(() => _hovering = false);
+          }
+        },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 250),
           curve: Curves.easeOutCubic,
@@ -768,8 +776,16 @@ class _StatCardState extends State<_StatCard> {
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
-      onEnter: (_) => setState(() => _hovering = true),
-      onExit: (_) => setState(() => _hovering = false),
+      onEnter: (_) {
+        if (mounted) {
+          setState(() => _hovering = true);
+        }
+      },
+      onExit: (_) {
+        if (mounted) {
+          setState(() => _hovering = false);
+        }
+      },
       child: Transform.translate(
         offset: Offset(0, _hovering ? -5.0 : 0.0),
         child: AnimatedContainer(

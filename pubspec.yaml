@@ -1,5 +1,5 @@
-name: aquaflow_dubai
-description: "A professional water delivery website for AquaFlow Dubai."
+name: sweet_water_tankers
+description: "A professional water delivery website for Sweet Water Tankers."
 publish_to: 'none'
 
 version: 1.0.0+1
@@ -14,6 +14,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   url_launcher: ^6.3.2
   shared_preferences: ^2.5.3
+  flutter_map: 8.3.2
+  latlong2: ^0.10.1
 
 dev_dependencies:
   flutter_test:

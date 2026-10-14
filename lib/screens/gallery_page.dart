@@ -9,7 +9,7 @@ class GalleryPage extends StatefulWidget {
   static const Color bodyText = Color(0xFF52667A);
   static const Color lightBg = Color(0xFFF6FBFD);
 
-  static const String whatsappNumber = '923104939138';
+  static const String whatsappNumber = '971551027786';
 
   static const List<GalleryItem> items = [
     GalleryItem(
@@ -92,7 +92,7 @@ class _GalleryPageState extends State<GalleryPage>
 
   Future<void> _openWhatsApp() async {
     final message = Uri.encodeComponent(
-      'Hello AquaFlow Dubai,\n\n'
+      'Hello Sweet Water Tankers,\n\n'
       'I would like to request a quote for water delivery.\n\n'
       'Please share the details and pricing.',
     );
@@ -290,7 +290,7 @@ class _TopBarState extends State<_TopBar> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  'AquaFlow',
+                                  'Sweet Water Tankers',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
@@ -982,7 +982,7 @@ class _BottomCtaState extends State<_BottomCta> {
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        'Contact AquaFlow Dubai for your next delivery.',
+                        'Contact Sweet Water Tankers for your next delivery.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.75),
@@ -1164,7 +1164,7 @@ class _Footer extends StatelessWidget {
                         ),
                         const SizedBox(width: 12),
                         const Text(
-                          'AquaFlow Dubai',
+                          'Sweet Water Tankers',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 17,
@@ -1177,7 +1177,7 @@ class _Footer extends StatelessWidget {
                     Divider(color: Colors.white.withValues(alpha: 0.08)),
                     const SizedBox(height: 18),
                     Text(
-                      '© 2026 AquaFlow Dubai. '
+                      '© 2026 Sweet Water Tankers. '
                       'Water Delivery Solutions.',
                       textAlign: TextAlign.center,
                       style: TextStyle(
