@@ -665,13 +665,16 @@ class _BrandState extends State<_Brand> {
           Row(
             children: [
               // FACEBOOK
-              _SocialButton(icon: Icons.facebook_rounded, onTap: _openFacebook),
+              _SocialButton(
+                assets: 'assets/images/social/facebook.png',
+                onTap: _openFacebook,
+              ),
 
               const SizedBox(width: 9),
 
               // INSTAGRAM
               _SocialButton(
-                icon: Icons.camera_alt_rounded,
+                assets: 'assets/images/social/instagram.png',
                 onTap: _openInstagram,
               ),
 
@@ -699,7 +702,7 @@ class _BrandState extends State<_Brand> {
                   duration: const Duration(milliseconds: 220),
                   curve: Curves.easeOutBack,
                   child: _SocialButton(
-                    icon: Icons.chat_rounded,
+                    assets: 'assets/images/social/whatsapp.png',
                     onTap: _openWhatsApp,
                   ),
                 ),
@@ -1154,10 +1157,10 @@ class _ContactItemState extends State<_ContactItem> {
 // ============================================================
 
 class _SocialButton extends StatefulWidget {
-  final IconData icon;
+  final String assets;
   final VoidCallback onTap;
 
-  const _SocialButton({required this.icon, required this.onTap});
+  const _SocialButton({required this.assets, required this.onTap});
 
   @override
   State<_SocialButton> createState() => _SocialButtonState();
@@ -1211,10 +1214,9 @@ class _SocialButtonState extends State<_SocialButton> {
             child: AnimatedRotation(
               turns: _hovered ? 0.03 : 0.0,
               duration: const Duration(milliseconds: 220),
-              child: Icon(
-                widget.icon,
-                size: 18,
-                color: _hovered ? Colors.white : Colors.white70,
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Image.asset(widget.assets, fit: BoxFit.contain),
               ),
             ),
           ),
